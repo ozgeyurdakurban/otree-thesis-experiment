@@ -1,0 +1,11 @@
+{% extends "otree/WaitPage.html" %}
+
+{% block title %}Lütfen Bekleyin{% endblock %}
+
+{% block content %}
+  <h3>Grup üyeleri kararlarını tamamlıyor…</h3>
+  {% if round_num and num_rounds %}
+    <p>Tur: {{ round_num }} / {{ num_rounds }}</p>
+  {% endif %}
+  <p>Herkes katkısını girdikten sonra bu ekran otomatik olarak ilerleyecektir.</p>
+{% endblock %}

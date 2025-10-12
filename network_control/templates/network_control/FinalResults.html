@@ -1,0 +1,77 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<h2 style="text-align:center;">Deney Tamamlandı — Nihai Sonuçlar</h2>
+
+<p style="color:#6b7280; margin-top:6px;">Katılımcı ID: <strong>{{ participant_code }}</strong></p>
+
+
+<table style="width:100%; border-collapse:collapse; font-size:0.95rem; margin-top:12px;">
+  <thead>
+    <tr>
+      <th style="text-align:left; padding:8px; border-bottom:2px solid #e5e7eb;">Gösterge</th>
+      {% for c in cols %}
+        <th style="text-align:center; padding:8px; border-bottom:2px solid #e5e7eb;">{{ c.round_num }}. Tur</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Sizin katkınız</td>
+      {% for c in cols %}<td style="text-align:center; padding:8px; border-bottom:1px solid #f1f5f9;">{{ c.your_contribution }}</td>{% endfor %}
+    </tr>
+    <tr>
+      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Toplam grup katkısı</td>
+      {% for c in cols %}<td style="text-align:center; padding:8px; border-bottom:1px solid #f1f5f9;">{{ c.total_contribution }}</td>{% endfor %}
+    </tr>
+    <tr>
+      <td style="padding:8px; border-bottom:1px solid #f1f5f9;font-weight:600;">Sizde kalan (Başlangıç jetonu − katkınız)</td>
+      {% for c in cols %}<td style="text-align:center;font-weight:600;">{{ c.keep }}</td>{% endfor %}
+    </tr>
+    <tr>
+      <td style="padding:8px; border-bottom:1px solid #f1f5f9;font-weight:600;">Ortak havuzdan dönüş (MPCR × toplam grup katkısı)</td>
+      {% for c in cols %}<td style="text-align:center;font-weight:600;">{{ c.public_return_str }}</td>{% endfor %}
+    </tr>
+    <tr>
+      <td style="padding:8px; border-bottom:2px solid #e5e7eb; font-weight:600;">Tur kazancı (Katkınız sonrası size kalan + Ortak havuzdan size dönüş)</td>
+      {% for c in cols %}<td style="text-align:center; font-weight:600;">{{ c.keep }} + {{ c.public_return_str }} = {{ c.payoff_str }}</td>{% endfor %}
+    </tr>
+    <tr>
+      <td style="padding:8px; border-bottom:2px solid #e5e7eb;">Kümülatif kazanç (jeton)</td>
+      {% for c in cols %}<td style="text-align:center; padding:8px; border-bottom:2px solid #e5e7eb;">{{ c.cum_payoff_str }}</td>{% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+<p style="margin-top:8px; color:#6b7280; font-size:0.9em;">
+Not: 1 jeton = {{ rate }} TL.
+</p>
+
+<hr style="margin:18px 0;">
+
+<h3>Ödeme Özeti</h3>
+<ul>
+  <li><strong>Katılım ücreti:</strong> {{ participation_bonus_str }} TL</li>
+  <li><strong>Başlangıç bonusu (100 TL’den verdiğiniz düşüldü):</strong> {{ retained_amount }} TL</li>
+  <li><strong>Oyun kazancı (toplam):</strong> {{ total_tl_from_game_str }} TL</li>
+</ul>
+
+<p style="font-size:1.05rem;">
+<strong>Toplam ödeme tutarınız:</strong>
+<span style="font-size:1.15rem;">{{ grand_total_tl_str }} TL</span>
+</p>
+
+<hr style="margin:18px 0;">
+
+<h3>Son Adımlar</h3>
+<ol>
+  <li>Önünüzdeki kâğıda <strong>Katılımcı ID</strong>’nizi (<strong>{{ participant_code }}</strong>) ve <strong>Toplam Ödeme</strong>’yi (<strong>{{ grand_total_tl_str }} TL</strong>) yazınız.</li>
+  <li>Birazdan açılacak <strong>anketi eksiksiz ve doğru</strong> şekilde doldurunuz.</li>
+  <li>Anketi tamamladıktan sonra, <strong>masaya gelerek Katılımcı ID</strong>’niz ile ödemenizi alabilirsiniz.</li>
+</ol>
+
+<div style="margin-top:14px;">
+  {{ next_button }}
+</div>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<h2 style="text-align:center;">BAŞLANGIÇ ÖLÇÜMLERİ</h2>
+
+<p>
+Bu sayfada iki kısa ölçüm tamamlayacaksınız. İlkinde, “<em>diktatör oyunu</em>” formatında
+size verilen 100 TL’nin ne kadarını başka bir kişiye vereceğinizi beyan edeceksiniz.
+İkincisinde, “<em>Sosyal Değer Yönelimi (SVO)</em>” formatında başkasının faydasının sizin için
+ne kadar önemli olduğunu 0–10 aralığında ölçeceksiniz.
+</p>
+
+<hr>
+<h3>1) Diktatör Oyunu</h3>
+<p>
+Size <strong>100 TL</strong> veriyoruz. Bu tutarın bir kısmını <em>başka bir kişiye</em>
+<strong>karşılıksız</strong> olarak verebilirsiniz; kalan miktar sizde kalır.
+Lütfen 0 ile 100 TL arasında, yalnızca 10’un katı olan bir miktar giriniz.
+</p>
+
+<div style="margin: 8px 0; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+  <input type="number" name="dg_amount" min="0" max="100" step="10" value="{{ dg }}"
+         style="width:100%;" oninput="validateDG()" required>
+  <div id="dg_warning" style="color:red; font-size:0.9em; margin-top:4px;"></div>
+  <div style="font-size: 0.95em; margin-top: 6px;">
+    <span>Başkasına verilecek: <strong id="dg_gift">{{ dg }}</strong> TL</span> —
+    <span>Sizde kalacak: <strong id="dg_keep">{{ dg_keep }}</strong> TL</span>
+  </div>
+</div>
+
+<hr>
+
+<h3>2) Sosyal Değer Yönelimi (SVO)</h3>
+<p>
+Aşağıdaki ölçek, başkasının faydasının sizin için <em>öznel önemini</em> sorar.
+Lütfen 0 ile 10 arasında bir nokta seçiniz.
+</p>
+
+<div style="margin: 8px 0; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+  <div style="display:flex; justify-content:space-between; font-size:0.95em; margin-bottom:6px;">
+    <span>0 (hiç önemli değil)</span>
+    <span>10 (çok önemli)</span>
+  </div>
+
+  <input type="range" name="svo_importance" min="0" max="10" step="1" value="{{ svo }}"
+         style="width:100%;" oninput="svo_val.textContent = this.value">
+
+  <div style="font-size: 0.95em; margin-top: 6px;">
+    Seçiminiz: <strong id="svo_val">{{ svo }}</strong> / 10
+  </div>
+</div>
+
+<hr>
+
+<p>
+Hazırsanız “Devam Et” butonuna basınız.
+</p>
+
+{{ next_button }}
+
+<script>
+  // DG: geçerli değer kontrolü + canlı geri bildirim
+  function validateDG() {
+    const input = document.querySelector('input[name="dg_amount"]');
+    const warning = document.getElementById('dg_warning');
+    const dgGift = document.getElementById('dg_gift');
+    const dgKeep = document.getElementById('dg_keep');
+    const value = parseInt(input.value || 0, 10);
+
+    if (value % 10 !== 0) {
+      warning.textContent = 'Lütfen yalnızca 10’un katı olan bir miktar giriniz.';
+    } else {
+      warning.textContent = '';
+    }
+
+    if (dgGift && dgKeep) {
+      dgGift.textContent = value;
+      dgKeep.textContent = 100 - value;
+    }
+  }
+
+  // SVO: canlı geri bildirim
+  const svoInput = document.querySelector('input[name="svo_importance"]');
+  const svoVal = document.getElementById('svo_val');
+  if (svoInput && svoVal) {
+    const updateSVO = () => {
+      const v = parseInt(svoInput.value || 5, 10);
+      svoVal.textContent = v;
+    };
+    svoInput.addEventListener('input', updateSVO);
+    updateSVO();
+  }
+</script>
+
+{% endblock %}

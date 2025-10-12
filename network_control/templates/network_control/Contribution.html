@@ -1,0 +1,90 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<h2 style="text-align:center;">{{ round_num }}. Tur — Katkı Kararı</h2>
+
+<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin:10px 0 16px 0;">
+  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
+    <div style="font-size:0.9em; color:#6b7280;">Başlangıç (jeton)</div>
+    <div style="font-size:1.25em; font-weight:600;">{{ endowment }}</div>
+  </div>
+
+  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
+    <div style="font-size:0.9em; color:#6b7280;">Grup Büyüklüğü</div>
+    <div style="font-size:1.25em; font-weight:600;">{{ group_size }}</div>
+  </div>
+
+  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
+    <div style="font-size:0.9em; color:#6b7280;">Ortak Havuzun Getiri Katsayısı</div>
+    <div style="font-size:1.25em; font-weight:600;">{{ mpcr_str }}</div>
+    <div style="font-size:0.85em; color:#6b7280; margin-top:4px;">
+      (Her 1 jeton ortak havuza yatırıldığında, grup toplam kazancına <strong>{{ beta }}</strong> jeton eklenir; kişi başına <strong>{{ mpcr_str }}</strong> jeton)
+    </div>
+  </div>
+</div>
+
+<p>
+Bu turda <strong>{{ endowment }}</strong> jetonunuz var.
+<em>0</em> ile <em>{{ endowment }}</em> arasında istediğiniz miktarı
+<strong>ortak havuza</strong> katkı olarak verebilirsiniz.
+Kalan jetonlar bireysel kazancınızda kalır.
+</p>
+
+<hr style="margin:16px 0;">
+
+<h3>1) Katkınızı Sayı Girerek Belirtin</h3>
+
+<div style="margin-bottom:12px;">
+  <input type="number" name="contribution" min="0" max="{{ endowment }}" step="1"
+         value="{{ contribution }}" style="width:100%;" oninput="updateContribution()" required>
+  <div style="font-size:0.85em; color:#6b7280; margin-top:4px;">(0 – {{ endowment }} aralığı)</div>
+</div>
+
+<!-- Canlı geri bildirim -->
+<div style="margin-top:12px; padding:12px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb;">
+  <div>Seçtiğiniz katkı: <strong id="live_c">{{ contribution }}</strong> jeton</div>
+<div>Sizde kalacak: <strong id="live_keep"></strong> jeton</div>
+</div>
+
+<hr style="margin:16px 0;">
+
+<h3>2) Bilgilendirme: Kazanç Formülü</h3>
+<p style="margin-bottom:6px;">Bu turdaki kazancınız şu formülle hesaplanır:</p>
+<p style="margin-left:20px;">
+  <strong>Kazanç = ({{ endowment }} − Katkınız) + ({{ mpcr_str }} × Toplam Grup Katkısı)</strong>
+</p>
+<p style="font-size:0.9em; color:#6b7280; margin-top:6px;">
+  Daha fazla katkı, grubun toplam kazancını artırır; ancak bireysel kazancınızı azaltabilir.
+  Her turda stratejik bir karar vermeniz beklenir.
+</p>
+
+<hr style="margin:16px 0;">
+
+<h3>3) Devam</h3>
+<p>Seçiminizden emin olduğunuzda “<strong>Devam Et</strong>” butonuna basınız.</p>
+
+{{ next_button }}
+
+<script>
+(function(){
+  const endowment = {{ endowment|json }};;
+  const field = document.querySelector('input[name="contribution"]');
+  const liveC = document.getElementById('live_c');
+  const liveKeep = document.getElementById('live_keep');
+
+  function clamp(x, lo, hi){ return Math.max(lo, Math.min(hi, Number(x)||0)); }
+
+  function updateContribution(){
+    const value = clamp(field.value, 0, endowment);
+    if (liveC) liveC.textContent = value;
+    if (liveKeep) liveKeep.textContent = (endowment - value).toFixed(0);
+  }
+
+  if (field) {
+    field.addEventListener('input', updateContribution);
+    updateContribution();
+  }
+})();
+</script>
+
+{% endblock %}
