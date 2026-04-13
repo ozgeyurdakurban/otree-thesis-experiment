@@ -1,0 +1,548 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+    --bg:#f8fafc;
+
+    --brand:#003366;
+    --brand2:#0d6efd;
+
+    --card:#ffffff;
+    --soft:#f1f5f9;
+
+    --ok:#198754;
+    --okbg:#f0fdf4;
+
+    --warn:#dc2626;
+    --warnbg:#fff1f2;
+  }
+
+  .pg{max-width: 980px; margin: 0 auto;}
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 26px rgba(2,6,23,.10);
+    margin-bottom: 12px;
+  }
+  .hero h2{margin:0; font-weight: 900;}
+  .hero p{margin:6px 0 0 0; opacity:.92; font-weight:700; line-height:1.4;}
+
+  .status-row{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top:10px;
+  }
+  .status{
+    display:flex; align-items:center; gap:8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 900;
+    font-size: .92rem;
+  }
+  .dot{width:10px; height:10px; border-radius:999px; background: rgba(255,255,255,.55);}
+  .done .dot{background:#fff;}
+  .done{background: rgba(255,255,255,.30);}
+
+  /* mini cards grid */
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items:start;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns: 1fr;} }
+
+  .mini{
+    border:1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+    overflow:hidden;
+  }
+
+  .mini-head{
+    padding: 12px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    cursor:pointer;
+    user-select:none;
+    background: #fff;
+  }
+  .mini-title{
+    display:flex; flex-direction:column; gap:2px;
+  }
+  .mini-title .t{font-weight: 900; color:var(--ink);}
+  .mini-title .s{font-weight: 800; color:var(--muted); font-size:.88rem;}
+  .badge{
+    font-size:.78rem;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border:1px solid var(--line);
+    background: var(--bg);
+    color: var(--muted);
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .badge.ok{
+    border-color: #86efac;
+    background: var(--okbg);
+    color: var(--ok);
+  }
+  .chev{
+    font-weight:900;
+    color: var(--muted);
+    border:1px solid var(--line);
+    width: 30px; height: 30px;
+    border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--bg);
+    flex: 0 0 auto;
+  }
+
+  .mini-body{
+    display:none;
+    padding: 12px 12px 14px 12px;
+    border-top:1px solid var(--line);
+    background: #fff;
+  }
+  .mini.open .mini-body{display:block;}
+  .mini.open .chev{transform: rotate(180deg);}
+
+  .muted{color: var(--muted); font-weight:700; line-height:1.45;}
+
+  .q{
+    border:1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px;
+    background:#fff;
+    margin-top: 10px;
+  }
+  .qname{font-weight: 900; color:var(--ink);}
+  .choices{display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px;}
+  .opt{
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    background: var(--soft);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    cursor:pointer;
+    transition: transform .05s ease, border-color .15s ease;
+  }
+  .opt:hover{border-color:#cbd5e1; transform: translateY(-1px);}
+  .opt-left{display:flex; align-items:center; gap:10px; font-weight: 900; color:var(--ink);}
+  .opt-right{color:var(--muted); font-weight:800;}
+  .opt input{transform: scale(1.08);}
+
+  .likert-item{
+    border:1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px;
+    background:#fff;
+    margin-top:10px;
+  }
+  .stmt{font-weight: 900; color:var(--ink); line-height:1.35;}
+  .scale{
+    margin-top:8px;
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  .scale label{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    font-size:.78rem; color:var(--muted); font-weight:900;
+    user-select:none;
+  }
+  .scale input{transform: scale(1.12);}
+
+  .range-top{
+    display:flex; justify-content:space-between; color:var(--muted);
+    font-weight:900; font-size:.88rem; margin:8px 0 6px;
+  }
+  .live{
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #0b3b87;
+    font-weight: 900;
+    text-align:center;
+  }
+
+  .hint{
+    margin-top:10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #fffbe6;
+    border: 1px solid #fde047;
+    color: #7c5a00;
+    font-weight: 800;
+  }
+
+  .footer{
+    margin-top: 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+    padding: 12px;
+    border:1px solid var(--line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+  }
+  .footer .msg{color:var(--muted); font-weight:800;}
+  .warnbox{
+    display:none;
+    margin-top:10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--warnbg);
+    border: 1px solid #fecaca;
+    color: var(--warn);
+    font-weight: 900;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<div class="pg">
+
+  <div class="hero">
+    <h2>Sosyal Tercih Ölçümleri</h2>
+    <p> Bölümleri kartlardan açıp doldurun. Doğru/yanlış yoktur.</p>
+
+    <div class="status-row">
+      <span class="status" id="statusA"><span class="dot"></span> Bölüm A</span>
+      <span class="status" id="statusB"><span class="dot"></span> Bölüm B</span>
+      <span class="status" id="statusC"><span class="dot"></span> Bölüm C</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ===================== -->
+    <!-- MINI CARD A -->
+    <!-- ===================== -->
+    <div class="mini" id="cardA">
+      <div class="mini-head" data-toggle="cardA">
+        <div class="mini-title">
+          <div class="t">Bölüm A – SVO (Choice-Based)</div>
+          <div class="s">3 soru • her birinde 1 seçim</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="badge" id="badgeA">Murphy et al. (2011)</span>
+          <div class="chev">⌄</div>
+        </div>
+      </div>
+
+      <div class="mini-body">
+        <p class="muted" style="margin:0;">
+          Her soruda kendiniz ve anonim bir katılımcı için farklı kazançlar görürsünüz.
+          En çok tercih ettiğiniz seçeneği işaretleyin.
+        </p>
+
+        <div class="q">
+          <div class="qname">Soru A1</div>
+          <div class="choices">
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a1" value="A" required> A</div>
+              <div class="opt-right">Siz 85 – Diğeri 15</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a1" value="B" required> B</div>
+              <div class="opt-right">Siz 50 – Diğeri 50</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a1" value="C" required> C</div>
+              <div class="opt-right">Siz 15 – Diğeri 85</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="qname">Soru A2</div>
+          <div class="choices">
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a2" value="A" required> A</div>
+              <div class="opt-right">Siz 90 – Diğeri 30</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a2" value="B" required> B</div>
+              <div class="opt-right">Siz 60 – Diğeri 60</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a2" value="C" required> C</div>
+              <div class="opt-right">Siz 30 – Diğeri 90</div>
+            </label>
+          </div>
+        </div>
+
+        <div class="q">
+          <div class="qname">Soru A3</div>
+          <div class="choices">
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a3" value="A" required> A</div>
+              <div class="opt-right">Siz 100 – Diğeri 20</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a3" value="B" required> B</div>
+              <div class="opt-right">Siz 70 – Diğeri 70</div>
+            </label>
+            <label class="opt">
+              <div class="opt-left"><input type="radio" name="svo_a3" value="C" required> C</div>
+              <div class="opt-right">Siz 20 – Diğeri 100</div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== -->
+    <!-- MINI CARD B -->
+    <!-- ===================== -->
+    <div class="mini" id="cardB">
+      <div class="mini-head" data-toggle="cardB">
+        <div class="mini-title">
+          <div class="t">Bölüm B – Prosocial Tendencies</div>
+          <div class="s">10 ifade • 1–7 ölçeği</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="badge" id="badgeB">Carlo &amp; Randall (2002)</span>
+          <div class="chev">⌄</div>
+        </div>
+      </div>
+
+      <div class="mini-body">
+        <p class="muted" style="margin:0;">
+          1 = Kesinlikle katılmıyorum • 7 = Kesinlikle katılıyorum
+        </p>
+
+        {% comment %} Daha az boğucu olsun diye tek tek, ama kompakt {% endcomment %}
+
+        <div class="likert-item">
+          <div class="stmt">B1. Başkalarına yardım etmek bana kişisel bir tatmin sağlar.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b1" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B2. Bir başkasının faydasına olacaksa, kendi kazancımdan feragat edebilirim.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b2" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B3. İnsanların ihtiyaç içinde olduğunu gördüğümde yardım etme isteği duyarım.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b3" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B4. Karşılığında bir şey beklemeden yardım etmek benim için önemlidir.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b4" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B5. Başkalarının durumunu düşünerek karar vermeye çalışırım.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b5" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B6. Yardım ettiğimde bunun fark edilip edilmemesi benim için önemli değildir.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b6" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B7. Toplumsal refahı artıran davranışlar bireysel kazançtan daha değerlidir.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b7" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B8. Birinin zor durumda olduğunu gördüğümde kayıtsız kalamam.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b8" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B9. Başkalarına yardım etmek ahlaki bir sorumluluktur.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b9" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+        <div class="likert-item">
+          <div class="stmt">B10. Kendi çıkarım ile başkalarının çıkarı çatıştığında, uzlaşmacı bir çözüm ararım.</div>
+          <div class="scale">{% for k in "1234567" %}<label><input type="radio" name="pt_b10" value="{{ k }}" required><span>{{ k }}</span></label>{% endfor %}</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===================== -->
+    <!-- MINI CARD C -->
+    <!-- ===================== -->
+    <div class="mini" id="cardC">
+      <div class="mini-head" data-toggle="cardC">
+        <div class="mini-title">
+          <div class="t">Bölüm C – Genel Altruizm (0–10)</div>
+          <div class="s">2 kısa soru • kaydırıcı</div>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span class="badge" id="badgeC">Falk et al. (2018)</span>
+          <div class="chev">⌄</div>
+        </div>
+      </div>
+
+      <div class="mini-body">
+        <div class="likert-item">
+          <div class="stmt">C1. Karşılığında hiçbir şey beklemeden yardım etmek sizin için ne kadar önemlidir?</div>
+          <div class="range-top"><span>0 = Hiç önemli değil</span><span>10 = Çok önemli</span></div>
+          <input type="range" name="alt_c1" id="alt_c1" min="0" max="10" step="1" style="width:100%;"
+                 oninput="document.getElementById('alt_c1_val').textContent=this.value" required>
+          <div class="live">Seçiminiz: <strong id="alt_c1_val">-</strong> / 10</div>
+        </div>
+
+        <div class="likert-item">
+          <div class="stmt">C2. Kendi kazancınız ile başkalarının kazancı arasında denge kurmaya ne kadar isteklisiniz?</div>
+          <div class="range-top"><span>0 = Hiç istekli değilim</span><span>10 = Çok istekliyim</span></div>
+          <input type="range" name="alt_c2" id="alt_c2" min="0" max="10" step="1" style="width:100%;"
+                 oninput="document.getElementById('alt_c2_val').textContent=this.value" required>
+          <div class="live">Seçiminiz: <strong id="alt_c2_val">-</strong> / 10</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="warnbox" id="warnbox">
+    Lütfen tüm bölümlerdeki zorunlu soruları yanıtlayın. İsterseniz kartları açıp kontrol edebilirsiniz.
+  </div>
+
+  <div class="footer">
+    <div class="msg">Tüm seçimler tamamlanınca “İlerle” ile devam edebilirsiniz.</div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // open/close mini cards
+  document.querySelectorAll('.mini-head').forEach(h => {
+    h.addEventListener('click', () => {
+      const id = h.getAttribute('data-toggle');
+      const card = document.getElementById(id);
+      if (card) card.classList.toggle('open');
+    });
+  });
+
+  function checked(name){
+    return !!document.querySelector(`input[name="${name}"]:checked`);
+  }
+
+  function isDoneA(){
+    return checked('svo_a1') && checked('svo_a2') && checked('svo_a3');
+  }
+
+  function isDoneB(){
+    for (let i=1;i<=10;i++){
+      if (!checked(`pt_b${i}`)) return false;
+    }
+    return true;
+  }
+
+  let c1Touched = false;
+  let c2Touched = false;
+
+  const c1 = document.getElementById('alt_c1');
+  const c2 = document.getElementById('alt_c2');
+
+  if (c1) {
+    c1.addEventListener('input', () => {
+      c1Touched = true;
+      document.getElementById('alt_c1_val').textContent = c1.value;
+      updateStatus();
+    });
+  }
+
+  if (c2) {
+    c2.addEventListener('input', () => {
+      c2Touched = true;
+      document.getElementById('alt_c2_val').textContent = c2.value;
+      updateStatus();
+    });
+  }
+
+  function isDoneC(){
+    return c1Touched && c2Touched;
+  }
+
+  function updateStatus(){
+    const a = isDoneA();
+    const b = isDoneB();
+    const c = isDoneC();
+
+    const statusA = document.getElementById('statusA');
+    const statusB = document.getElementById('statusB');
+    const statusC = document.getElementById('statusC');
+
+    const badgeA = document.getElementById('badgeA');
+    const badgeB = document.getElementById('badgeB');
+    const badgeC = document.getElementById('badgeC');
+
+    statusA.classList.toggle('done', a);
+    statusB.classList.toggle('done', b);
+    statusC.classList.toggle('done', c);
+
+    if (a){ badgeA.classList.add('ok'); badgeA.textContent = 'Tamamlandı ✓'; }
+    else { badgeA.classList.remove('ok'); badgeA.textContent = 'Murphy et al. (2011)'; }
+
+    if (b){ badgeB.classList.add('ok'); badgeB.textContent = 'Tamamlandı ✓'; }
+    else { badgeB.classList.remove('ok'); badgeB.textContent = 'Carlo & Randall (2002)'; }
+
+    if (c){ badgeC.classList.add('ok'); badgeC.textContent = 'Tamamlandı ✓'; }
+    else { badgeC.classList.remove('ok'); badgeC.textContent = 'Falk et al. (2018)'; }
+  }
+
+  // hook inputs
+  document.addEventListener('change', updateStatus);
+  document.addEventListener('input', updateStatus);
+
+  // sliders init
+  document.addEventListener('DOMContentLoaded', function(){
+    const c1 = document.getElementById('alt_c1');
+    const c2 = document.getElementById('alt_c2');
+    if (c1) document.getElementById('alt_c1_val').textContent = c1.value;
+    if (c2) document.getElementById('alt_c2_val').textContent = c2.value;
+    updateStatus();
+  });
+
+  // optional: if they hit submit with missing answers, show warning + open incomplete cards
+  const form = document.querySelector('form');
+  const warnbox = document.getElementById('warnbox');
+  if (form) {
+    form.addEventListener('submit', function(e){
+      // Let browser validation run; but we also help user by opening missing sections
+      // If any required field missing, browser will block submit anyway.
+      const a = isDoneA();
+      const b = isDoneB();
+      const c = isDoneC();
+
+      if (!(a && b && c)) {
+        warnbox.style.display = 'block';
+        if (!a) document.getElementById('cardA').classList.add('open');
+        if (!b) document.getElementById('cardB').classList.add('open');
+        if (!c) document.getElementById('cardC').classList.add('open');
+      } else {
+        warnbox.style.display = 'none';
+      }
+    });
+  }
+})();
+</script>
+
+{% endblock %}

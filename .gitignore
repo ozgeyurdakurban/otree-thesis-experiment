@@ -2,6 +2,6 @@ __pycache__/
 *.pyc
 db.sqlite3
 .env
-.vscode/
-*.log
-*.bak
+.venv/
+venv/
+.DS_Store

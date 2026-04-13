@@ -1,0 +1,38 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<h2>Demografik Bilgiler</h2>
+
+<p>Lütfen aşağıdaki soruları yanıtlayınız. Bilgileriniz anonim olarak saklanacaktır ve yalnızca bilimsel amaçlarla kullanılacaktır.</p>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'age' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'gender' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'field_of_study' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'year_of_study' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'cgpa' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'monthly_income' }}
+</div>
+
+<div style="margin-top: 1em;">
+    {{ formfield 'risk_attitude' }}
+</div>
+
+{{ next_button }}
+
+{% endblock %}

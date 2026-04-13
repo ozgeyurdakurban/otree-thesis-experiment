@@ -1,0 +1,410 @@
+{% extends "global/Page.html" %}
+{% block title %}Tur {{ round_num }} - Katkı Kararı{% endblock %}
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --warn:#dc2626;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+    --amber:#ca8a04;
+    --amberbg:#fffbe6;
+    --amberline:#fde047;
+  }
+
+  .pg-wrap{max-width: 980px; margin: 0 auto;}
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{margin:0; font-weight: 900;}
+  .hero p{margin:6px 0 0 0; opacity:.92; line-height: 1.5;}
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 800;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items:start;
+  }
+  @media (max-width: 980px){
+    .grid{grid-template-columns: 1fr;}
+  }
+
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+    margin-top: 12px;
+  }
+  .title-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0;
+    color: var(--ink);
+    font-weight: 900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .muted{color: var(--muted);}
+
+  .statgrid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  @media (max-width: 520px){
+    .statgrid{grid-template-columns: 1fr;}
+  }
+  .stat{
+    border:1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 10px;
+    background: #fff;
+  }
+  .stat .k{font-size:.9rem; color: var(--muted); font-weight: 900;}
+  .stat .v{font-size:1.2rem; font-weight: 900; color: var(--ink);}
+  .stat .s{font-size:.86rem; color: var(--muted); margin-top: 4px; font-weight: 800; line-height: 1.25;}
+
+  .summary{
+    margin-top: 10px;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    text-align:center;
+  }
+  .summary .k{color: var(--muted); font-weight: 800;}
+  .summary .v{font-weight: 900; font-size: 1.05rem;}
+  .v-red{color: #dc2626;}
+  .v-green{color: #16a34a;}
+
+  .warn{
+    margin-top: 6px;
+    color: var(--warn);
+    font-weight: 800;
+    font-size: .92rem;
+  }
+
+  .reminder{
+    background: var(--amberbg);
+    border: 1px solid var(--amberline);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+    margin-top: 12px;
+  }
+  .reminder h4{
+    margin:0 0 6px 0;
+    color: var(--amber);
+    font-weight: 900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .formula{
+    margin: 8px 0 0 0;
+    padding: 10px 12px;
+    background:#fff;
+    border: 1px dashed #e5e7eb;
+    border-radius: 14px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+  .smallnote{
+    margin-top: 8px;
+    font-size:.92rem;
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-note{
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<div class="pg-wrap">
+
+  <!-- HERO (minimal dil) -->
+  <div class="hero">
+    <h2>Tur {{ round_num }} / {{ C.NUM_ROUNDS }} — Katkı Kararı </h2>
+    <p>
+      Bu tur için başlangıç bütçeniz <strong>{{ endowment }} jetondur</strong>.
+      0 ile {{ endowment }} arasında bir tam sayı seçerek <strong>Ortak Havuz</strong>'a katkınızı belirleyin.
+    
+    </p>
+    <div>
+      <span class="pill">🪙 Bütçe: {{ endowment }}</span>
+      <span class="pill">👥 Komşuluk: 3 kişi</span>
+      <span class="pill">🔁 Cycle (Halka) ağı</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- SOL: Ağ + kısa özetler + network görseli (korundu) -->
+    <div class="cardx">
+      <div class="title-row">
+        <h3>Ağ Konumunuz</h3>
+        <span class="tag">Kalın düğüm = Siz</span>
+      </div>
+
+      <div class="statgrid">
+        <div class="stat">
+          <div class="k"></div>
+          <div class="s" style="font-size:.95rem; color: var(--ink); font-weight: 900;">
+            Siz: <strong>#{{ you_idx }}</strong><br>
+            Komşu: <strong>#{{ left_idx }}</strong><br>
+            Komşu: <strong>#{{ right_idx }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top: 10px;">
+        <svg id="mini-cycle" width="320" height="240" viewBox="0 0 320 240"
+             style="max-width:100%; border:1px dashed #e5e7eb; border-radius:12px; background:#fff;"></svg>
+        <div class="smallnote" style="margin-top:8px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- SAĞ: Karar (minimal örneğe benzer) -->
+    <div>
+
+      <div class="cardx">
+        <div class="title-row">
+          <h3>Kararınız</h3>
+          <span class="tag">0–{{ endowment }}</span>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <label for="contribution_input" class="form-label" style="font-weight: 900; color: var(--ink);">
+            Ortak Havuza Katkınız (0 - {{ endowment }}):
+          </label>
+
+          <input
+            type="number"
+            name="contribution"
+            id="contribution_input"
+            min="0"
+            max="{{ endowment }}"
+            step="1"
+            value="{{ contribution }}"
+            style="width:100%;"
+            oninput="updateContribution()"
+            required
+            class="form-control form-control-lg"
+          >
+
+          <div id="contribution_warning" class="warn"></div>
+        </div>
+
+        <div class="summary">
+          <div>
+            <div class="k">Ortak Havuza Katkınız</div>
+            <div class="v v-red"><span id="live_c">{{ contribution }}</span> jeton</div>
+          </div>
+          <div style="height: 24px; width:1px; background: var(--line);"></div>
+          <div>
+            <div class="k">Size Kalacak</div>
+            <div class="v v-green"><span id="live_keep"></span> jeton</div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="reminder">
+        <h4>⏱ Hatırlatma: Kazanç Formülü</h4>
+        <div class="muted" style="font-weight:800;">Bu turdaki kazancınız şu şekilde hesaplanacaktır:</div>
+
+        <div class="formula">
+          Kazanç = ({{ endowment }} − Sizin Katkınız) + (({{ beta }} × Grubun Toplam Katkısı)/{{ group_size }})
+        </div>
+
+        <div class="smallnote">
+          </em>.
+        </div>
+
+<div class="smallnote">
+  <ul class="note-list">
+    <li>Grubun Toplam Katkısı, <em>sizin katkınız </em> ile <em>sol ve sağ komşularınızın katkıları</em> toplamıdır.</li>
+    <li>Bu katkı Ortak Havuzda %20 değerlenerek (1,2 ile çarpılarak) gruptaki herkese eşit olarak dağıtılır (3’e bölünür).</li>
+    <li>Dolayısıyla Ortak Havuza yapılan her 1 jeton 0.40 olarak geri döner.</li>
+  </ul>
+</div>
+
+    
+  </div>
+
+  <div class="footer">
+    <div class="footer-note">
+          Katkı kararınızı girdikten sonra “Devam Et” butonuna basınız.
+    </div>
+    {{ next_button }}
+  </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  // ----- Canlı geri bildirim -----
+  const endowment = {{ endowment|json }};
+  const field = document.querySelector('input[name="contribution"]');
+  const liveC = document.getElementById('live_c');
+  const liveKeep = document.getElementById('live_keep');
+  const warning = document.getElementById('contribution_warning');
+
+  function clamp(x, lo, hi){ return Math.max(lo, Math.min(hi, Number(x)||0)); }
+
+  function _updateContribution(){
+    if (!field) return;
+
+    let value = clamp(field.value, 0, endowment);
+    value = Math.round(value);
+
+    if (value < 0) value = 0;
+    if (value > endowment) value = endowment;
+
+    if (String(field.value) !== '' && Number(field.value) !== value) {
+      field.value = value;
+    }
+
+    if (liveC) liveC.textContent = value;
+    if (liveKeep) liveKeep.textContent = (endowment - value).toFixed(0);
+
+    if (warning) warning.textContent = '';
+  }
+
+  // HTML oninput için global
+  window.updateContribution = _updateContribution;
+
+  if (field) {
+    field.addEventListener('input', _updateContribution);
+    document.addEventListener('DOMContentLoaded', _updateContribution);
+  }
+
+  // ----- Mini cycle SVG -----
+  const svg = document.getElementById('mini-cycle');
+  const groupSize = {{ group_size|json }};
+  const youIdx = {{ you_idx|json }};
+
+  function el(name, attrs){
+    const e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+    return e;
+  }
+
+  if (!svg) return;
+
+  // Düğümleri daire üzerinde yerleştir
+  const cx = 160, cy = 120, r = 80;
+  const coords = [];
+  for (let k=0; k<groupSize; k++){
+    const theta = (2 * Math.PI * k / groupSize) - Math.PI/2;
+    coords.push([cx + r * Math.cos(theta), cy + r * Math.sin(theta)]);
+  }
+
+  // Kenarlar
+  for (let i=0; i<groupSize; i++){
+    const j = (i+1) % groupSize;
+    const [x1,y1] = coords[i];
+    const [x2,y2] = coords[j];
+    svg.appendChild(el('line', { x1, y1, x2, y2, stroke:'#cbd5e1', 'stroke-width':2 }));
+  }
+
+  // Düğümler
+  for (let i=0; i<groupSize; i++){
+    const idx = i+1;
+    const [x,y] = coords[i];
+    const isYou = (idx === youIdx);
+
+    const g = el('g', {});
+    const circle = el('circle', {
+      cx:x, cy:y, r: isYou ? 14 : 11,
+      fill: isYou ? '#1f77b4' : '#9ca3af',
+      stroke: isYou ? '#0f4c81' : '#6b7280',
+      'stroke-width': isYou ? 3 : 1.5
+    });
+    const label = el('text', {
+      x:x, y:y + 4,
+      'text-anchor':'middle',
+      'font-size': isYou ? 12 : 11,
+      fill:'#111827',
+      'font-weight': isYou ? 900 : 800
+    });
+    label.textContent = isYou ? 'Siz' : `#${idx}`;
+    g.appendChild(circle);
+    g.appendChild(label);
+    svg.appendChild(g);
+  }
+})();
+</script>
+
+{% endblock %}

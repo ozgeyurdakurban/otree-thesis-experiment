@@ -1,5 +1,10 @@
 from otree.api import *
 
+doc = """
+Control Treatment:
+Her grup 24 kişiden oluşur ve oyuncuların hepsi birbiriyle etkileşimde bulunur.
+"""
+
 class C(BaseConstants):
     NAME_IN_URL = 'network_control'
     PLAYERS_PER_GROUP = 3
@@ -27,23 +32,31 @@ class Group(BaseGroup):
             p.payoff = C.ENDOWMENT - p.contribution + self.mpcr * total_contribution
 
 class Player(BasePlayer):
-    # Diktatör oyunu: 0–100 TL, 10’un katları
-    dg_amount = models.IntegerField(
-        min=0,
-        max=100,
-        label='Başkasına vermek istediğiniz miktarı seçiniz (0–100 TL, 10’un katları)'
-    )
+    # Alturism ölçümleri
+    # --- Section A: SVO (A/B/C) ---
+    svo_a1 = models.StringField(choices=['A', 'B', 'C'])
+    svo_a2 = models.StringField(choices=['A', 'B', 'C'])
+    svo_a3 = models.StringField(choices=['A', 'B', 'C'])
 
-    # SVO: 0–10 arası önem derecesi
-    svo_importance = models.IntegerField(
-        min=0,
-        max=10,
-        label='Başkalarının faydası sizin için ne kadar önemlidir? (0–10)'
-    )
+    # --- Section B: Likert 1..7 ---
+    pt_b1  = models.IntegerField(choices=range(1, 8))
+    pt_b2  = models.IntegerField(choices=range(1, 8))
+    pt_b3  = models.IntegerField(choices=range(1, 8))
+    pt_b4  = models.IntegerField(choices=range(1, 8))
+    pt_b5  = models.IntegerField(choices=range(1, 8))
+    pt_b6  = models.IntegerField(choices=range(1, 8))
+    pt_b7  = models.IntegerField(choices=range(1, 8))
+    pt_b8  = models.IntegerField(choices=range(1, 8))
+    pt_b9  = models.IntegerField(choices=range(1, 8))
+    pt_b10 = models.IntegerField(choices=range(1, 8))
 
-    # Diğer deney alanları (örnek)
+    # --- Section C: sliders 0..10 ---
+    alt_c1 = models.IntegerField(min=0, max=10)
+    alt_c2 = models.IntegerField(min=0, max=10)
+
+    # Deney alanları
     contribution = models.IntegerField(min=0, max=C.ENDOWMENT)
-    sva = models.IntegerField(min=1, max=10)
+
     network_role = models.StringField()
     degree = models.IntegerField()
 

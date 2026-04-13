@@ -1,0 +1,389 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+
+    --brand:#003366;
+    --brand2:#0d6efd;
+
+    --redbg:#fff1f2;
+    --greenbg:#f0fdf4;
+    --bluebg:#eff6ff;
+
+    --card:#ffffff;
+    --bg:#f8fafc;
+  }
+
+  .pg{max-width: 1000px; margin: 0 auto; padding: 6px 6px;}
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .hero h2{margin:0; font-weight:900;}
+  .hero p{margin:6px 0 0 0; opacity:.92; font-weight:700; line-height:1.4;}
+
+  .info{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background: #fff;
+    margin-bottom:10px;
+  }
+  .info.cycle{ background: var(--bluebg); }
+  .info .title{font-weight:900; color:var(--ink); margin-bottom:6px;}
+  .info .text{color:var(--ink); font-weight:700; font-size:0.95em; line-height:1.45;}
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:10px;
+    margin: 10px 0 12px 0;
+  }
+  @media (max-width:900px){
+    .cards{grid-template-columns:1fr;}
+  }
+  .kpi{
+    border-radius:14px;
+    padding:14px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-weight:800;
+  }
+  .kpi.red{background:var(--redbg);}
+  .kpi.green{background:var(--greenbg);}
+  .kpi.blue{background:var(--bluebg);}
+
+  .kpi .label{color:var(--muted); font-size:0.9em; font-weight:900;}
+  .kpi .val{font-size:1.55em; margin-top:6px; font-weight:900; color:var(--ink);}
+  .kpi .sub{font-size:0.9em; color:var(--muted); margin-top:4px; font-weight:800; line-height:1.35;}
+
+  .netwrap{
+    display:grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap:10px;
+    align-items:start;
+  }
+  @media (max-width:900px){
+    .netwrap{grid-template-columns:1fr;}
+  }
+  .netbox{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+  }
+  .netbox h3{
+    margin:0 0 8px 0;
+    font-weight:900;
+    color:var(--ink);
+    font-size:1.02rem;
+  }
+  .pill{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background: var(--bg);
+    color: var(--muted);
+    font-weight:900;
+    font-size:.82rem;
+    margin-right:6px;
+    margin-top:6px;
+  }
+
+  .node-list{
+    list-style:none;
+    margin:8px 0 0 0;
+    padding:0;
+  }
+  .node-list li{
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    margin-top:8px;
+    font-weight:900;
+    color:var(--ink);
+    background:#fff;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .node-list .who{color:var(--muted); font-weight:900;}
+  .node-list .you{background: #eef2ff; border-color:#c7d2fe;}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  th, td{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:center;
+    font-size:0.95rem;
+    vertical-align:middle;
+  }
+  th:first-child, td:first-child{
+    text-align:left;
+    font-weight:900;
+    color: var(--muted);
+    width: 34%;
+  }
+  thead th{
+    background:#f1f5f9;
+    font-weight:900;
+  }
+  tr.highlight{
+    background:#f8fafc;
+    font-weight:900;
+  }
+
+  .note{
+    margin-top:10px;
+    font-size:0.9em;
+    color:#64748b;
+    font-weight:800;
+  }
+
+  .footer{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<div class="pg">
+
+  <div class="hero">
+    <h2>Tur Sonu Ekranı ({{ round_num }}/{{ num_rounds }})</h2>
+    <p>Bu turdaki kararınızın sonucu aşağıda özetlenmiştir.</p>
+  </div>
+
+
+ <!-- doğal dil özeti (içerik aynı)  
+  <div class="info"> 
+    <div class="text">{{ this_round_sentence }}</div>
+  </div>
+-->
+
+  <!-- KPI kartlar: sadece SON TUR -->
+  {% for c in cols %}
+    {% if forloop.counter == cols|length %}
+      <div class="cards">
+        <div class="kpi red">
+          <div class="label">Sizin katkınız</div>
+          <div class="val">{{ c.your_contribution }} jeton</div>
+          <div class="sub">Sizde kalan: {{ c.keep }}</div>
+        </div>
+
+        <div class="kpi blue">
+          <div class="label">Ortak havuzdan dönüş</div>
+          <div class="val">{{ c.public_return_str }} jeton</div>
+        </div>
+
+        <div class="kpi green">
+          <div class="label">Tur kazancı</div>
+          <div class="val">{{ c.payoff_str }} jeton</div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <!-- NETWORK + node katkıları -->
+  <div class="netwrap">
+
+    <div class="netbox">
+      <h3>Kapalı Komşuluğunuz (Siz + 2 komşu)</h3>
+      <div>
+        <span class="pill">Toplam katkı: {{ neigh_total_contribution }}</span>
+        <span class="pill">Kişi sayısı: {{ neigh_size }}</span>
+      </div>
+
+      <svg id="mini-cycle" width="360" height="260" viewBox="0 0 360 260"
+           style="max-width:100%; margin-top:10px; border:1px dashed #e5e7eb; border-radius:12px; background:#fff;"></svg>
+
+      <div class="note" style="margin-top:8px;">
+        Kalın düğüm <strong>sizi</strong> gösterir; düğüm içindeki sayı o oyuncunun katkısıdır.
+      </div>
+    </div>
+
+    <div class="netbox">
+      <h3>Node Katkıları</h3>
+      <ul class="node-list">
+        {% for n in neigh_nodes %}
+          <li class="{% if n.is_you %}you{% endif %}">
+            <span class="who">#{{ n.idx }}{% if n.is_you %} (Siz){% endif %}</span>
+            <span>{{ n.contribution }} jeton</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- DETAY TABLO (screenshot’a benzer formüllerle) -->
+  <table>
+    <thead>
+      <tr>
+        <th>Gösterge</th>
+        {% for c in cols %}
+          <th>{{ c.round_num }}. Tur</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Başlangıç</td>
+        {% for c in cols %}<td>{{ c.endowment }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Sizin katkınız</td>
+        {% for c in cols %}<td>{{ c.your_contribution }}</td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Sizde kalan</td>
+        {% for c in cols %}<td>{{ c.endowment }} - {{ c.your_contribution }} = <strong>{{ c.keep }}</strong></td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Diğerlerinin toplam katkısı</td>
+        {% for c in cols %}<td>{{ c.others_contribution }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Toplam grup katkısı</td>
+        {% for c in cols %}<td>{{ c.others_contribution }} + {{ c.your_contribution }} = <strong>{{ c.total_contribution }}</strong></td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Ortak havuzdan dönüş katsayısı</td>
+        {% for c in cols %}<td>{{ c.beta }} / {{ c.neighborhood_size }} = <strong>{{ c.mpcr_str }}</strong></td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Ortak havuzdan dönüş</td>
+        {% for c in cols %}<td>{{ c.total_contribution }} x {{ c.mpcr_str }} = <strong>{{ c.public_return_str }}</strong></td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Tur kazancı</td>
+        {% for c in cols %}<td>{{ c.keep }} + {{ c.public_return_str }} = <strong>{{ c.payoff_str }}</strong></td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Tur kazancı (TL)</td>
+        {% for c in cols %}<td>{{ c.payoff_tl_str }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Kümülatif kazanç</td>
+        {% for c in cols %}<td>{{ c.cum_payoff_str }}</td>{% endfor %}
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note">
+    Not: 1 jeton = {{ rate }} TL. TL karşılıkları ödeme sayfasında ayrıca gösterilecektir.
+  </p>
+
+  <div class="footer">
+    {{ next_button }}
+  </div>
+
+</div>
+
+<script>
+(function(){
+  // neigh_nodes: [{idx, contribution, is_you}, ...]
+  const nodes = {{ neigh_nodes|json }};
+  const svg = document.getElementById('mini-cycle');
+  if (!svg || !nodes || nodes.length === 0) return;
+
+  function el(name, attrs){
+    const e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+    return e;
+  }
+
+  // Kapalı komşuluk 3 kişi (cycle) varsayımıyla daire üzerine diz
+  const n = nodes.length;
+  const cx = 180, cy = 130, r = 85;
+  const coords = [];
+
+  for (let k=0; k<n; k++){
+    const theta = (2*Math.PI*k/n) - Math.PI/2;
+    coords.push([cx + r*Math.cos(theta), cy + r*Math.sin(theta)]);
+  }
+
+  // Kenarlar: cycle görünümü için ardışık bağla
+  for (let i=0; i<n; i++){
+    const j = (i+1) % n;
+    const [x1,y1] = coords[i];
+    const [x2,y2] = coords[j];
+    svg.appendChild(el('line', {x1,y1,x2,y2, stroke:'#cbd5e1', 'stroke-width':2}));
+  }
+
+  // Düğümler + katkı değeri
+  for (let i=0; i<n; i++){
+    const [x,y] = coords[i];
+    const nd = nodes[i];
+    const isYou = !!nd.is_you;
+
+    const g = el('g', {});
+    const circle = el('circle', {
+      cx:x, cy:y, r: isYou ? 18 : 15,
+      fill: isYou ? '#1f77b4' : '#9ca3af',
+      stroke: isYou ? '#0f4c81' : '#6b7280',
+      'stroke-width': isYou ? 3 : 1.5
+    });
+
+    // üst etiket: #idx (Siz)
+    const labelTop = el('text', {
+      x:x, y:y - 22,
+      'text-anchor':'middle',
+      'font-size': 12,
+      fill:'#111827',
+      'font-weight': 900
+    });
+    labelTop.textContent = isYou ? `#${nd.idx} (Siz)` : `#${nd.idx}`;
+
+    // iç değer: katkı
+    const val = el('text', {
+      x:x, y:y + 5,
+      'text-anchor':'middle',
+      'font-size': 13,
+      fill:'#111827',
+      'font-weight': 900
+    });
+    val.textContent = String(nd.contribution);
+
+    g.appendChild(circle);
+    g.appendChild(labelTop);
+    g.appendChild(val);
+    svg.appendChild(g);
+  }
+})();
+</script>
+
+{% endblock %}

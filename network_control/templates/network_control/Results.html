@@ -1,71 +1,204 @@
 {% extends "global/Page.html" %}
 {% block content %}
 
-<h2 style="text-align:center;">Tur Sonu Ekranı ({{ round_num }}/{{ num_rounds }})</h2>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
 
-<div style="margin:10px 0 16px 0; padding:12px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb;">
-  {{ this_round_sentence }}
-</div>
+    --brand:#003366;
+    --brand2:#0d6efd;
 
-<table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
-  <thead>
-    <tr>
-      <th style="text-align:left; padding:8px; border-bottom:2px solid #e5e7eb;">Gösterge</th>
-      {% for c in cols %}
-        <th style="text-align:center; padding:8px; border-bottom:2px solid #e5e7eb;">{{ c.round_num }}. Tur</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Başlangıç</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.endowment }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Sizin katkınız</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.your_contribution }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;font-weight:600;">Sizde kalan (Başlangıç jetonu − katkınız)</td>
-      {% for c in cols %}<td style="text-align:center;font-weight:600;">{{ c.keep }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Diğerlerinin toplam katkısı</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.others_contribution }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">Toplam grup katkısı (Sizin katkınız + diğerlerinin katkısı)</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.total_contribution }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;">MPCR</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.mpcr_str }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:1px solid #f1f5f9;font-weight:600;">Ortak havuzdan dönüş (MPCR × toplam grup katkısı)</td>
-      {% for c in cols %}<td style="text-align:center;font-weight:600;">{{ c.public_return_str }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:2px solid #e5e7eb; font-weight:600;">Tur kazancı (Katkınız sonrası size kalan + Ortak havuzdan size dönüş)</td>
-      {% for c in cols %}<td style="text-align:center; font-weight:600;">{{ c.keep }} + {{ c.public_return_str }} = {{ c.payoff_str }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:2px solid #e5e7eb;">Tur kazancı (TL)</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.payoff_tl_str }}</td>{% endfor %}
-    </tr>
-    <tr>
-      <td style="padding:8px; border-bottom:2px solid #e5e7eb;">Kümülatif kazanç (jeton)</td>
-      {% for c in cols %}<td style="text-align:center;">{{ c.cum_payoff_str }}</td>{% endfor %}
-    </tr>
-  </tbody>
-</table>
+    --red:#dc3545;
+    --green:#198754;
+    --blue:#0d6efd;
 
-<p style="margin-top:8px; color:#6b7280; font-size:0.9em;">
-Not: 1 jeton = {{ rate }} TL. TL karşılıkları ödeme sayfasında ayrıca gösterilecektir.
-</p>
+    --redbg:#fff1f2;
+    --greenbg:#f0fdf4;
+    --bluebg:#eff6ff;
+  }
 
-<div style="margin-top:14px;">
+  .pg{max-width: 1000px; margin: 0 auto;}
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .hero h2{margin:0; font-weight:900;}
+  .hero p{margin:6px 0 0 0; opacity:.9; font-weight:600;}
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:12px;
+    margin-bottom:16px;
+  }
+
+  @media (max-width:900px){
+    .cards{grid-template-columns:1fr;}
+  }
+
+  .kpi{
+    border-radius:14px;
+    padding:14px;
+    border:1px solid var(--line);
+    font-weight:700;
+  }
+
+  .kpi.red{background:var(--redbg);}
+  .kpi.green{background:var(--greenbg);}
+  .kpi.blue{background:var(--bluebg);}
+
+  .kpi .label{color:var(--muted); font-size:0.9em;}
+  .kpi .val{font-size:1.6em; margin-top:6px;}
+  .kpi .sub{font-size:0.9em; color:var(--muted); margin-top:4px;}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+  }
+
+  th, td{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:center;
+  }
+
+  th:first-child, td:first-child{
+    text-align:left;
+    font-weight:700;
+    color:#475569;
+  }
+
+  thead th{
+    background:#f1f5f9;
+    font-weight:800;
+  }
+
+  tr.highlight{
+    background:#f8fafc;
+    font-weight:800;
+  }
+
+  .note{
+    margin-top:10px;
+    font-size:0.9em;
+    color:#64748b;
+  }
+
+</style>
+
+<div class="pg">
+
+  <div class="hero">
+    <h2>Tur Sonu Ekranı ({{ round_num }}/{{ num_rounds }})</h2>
+    <p>Bu turdaki kararınızın sonucu aşağıda özetlenmiştir.</p>
+  </div>
+
+  <!-- 🔹 HIZLI ÖZET (SADECE SON TUR) -->
+  {% for c in cols %}
+    {% if forloop.counter == cols|length %}
+      <div class="cards">
+
+        <div class="kpi red">
+          <div class="label">Sizin katkınız</div>
+          <div class="val">{{ c.your_contribution }} jeton</div>
+          <div class="sub">Sizde kalan: {{ c.keep }}</div>
+        </div>
+
+        <div class="kpi blue">
+          <div class="label">Ortak havuzdan dönüş</div>
+          <div class="val">{{ c.public_return_str }} jeton</div>
+        </div>
+
+        <div class="kpi green">
+          <div class="label">Tur kazancı</div>
+          <div class="val">{{ c.payoff_str }} jeton</div>
+        </div>
+
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <!-- 🔹 DETAY TABLO -->
+  <table>
+    <thead>
+      <tr>
+        <th>Gösterge</th>
+        {% for c in cols %}
+          <th>{{ c.round_num }}. Tur</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>Başlangıç</td>
+        {% for c in cols %}<td>{{ c.endowment }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Sizin katkınız</td>
+        {% for c in cols %}<td>{{ c.your_contribution }}</td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Sizde kalan</td>
+        {% for c in cols %}<td>{{ c.endowment }} - {{ c.your_contribution }} = {{ c.keep }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Diğerlerinin toplam katkısı</td>
+        {% for c in cols %}<td>{{ c.others_contribution }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Toplam grup katkısı</td>
+        {% for c in cols %}<td>{{ c.others_contribution }} + {{ c.your_contribution }} = {{ c.total_contribution }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Ortak havuzdan dönüş katsayısı</td>
+        {% for c in cols %}<td>{{ beta }} / {{ group_size }} = {{ c.mpcr_str }}</td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Ortak havuzdan dönüş</td>
+        {% for c in cols %}<td>{{ c.total_contribution }} x {{ c.mpcr_str }} = {{ c.public_return_str }}</td>{% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Tur kazancı</td>
+        {% for c in cols %}
+          <td>{{ c.keep }} + {{ c.public_return_str }} = {{ c.payoff_str }}</td>
+        {% endfor %}
+      </tr>
+
+      <tr>
+        <td>Tur kazancı (TL)</td>
+        {% for c in cols %}<td>{{ c.payoff_tl_str }}</td>{% endfor %}
+      </tr>
+
+      <tr>
+        <td>Kümülatif kazanç</td>
+        {% for c in cols %}<td>{{ c.cum_payoff_str }}</td>{% endfor %}
+      </tr>
+
+    </tbody>
+  </table>
+
+  <p class="note">
+    Not: 1 jeton = {{ rate }} TL. TL karşılıkları ödeme sayfasında ayrıca gösterilecektir.
+  </p>
+
   {{ next_button }}
+
 </div>
 
 {% endblock %}

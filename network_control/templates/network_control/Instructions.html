@@ -1,138 +1,207 @@
 {% extends "global/Page.html" %}
 {% block content %}
 
-<h2 style="text-align:center;">DENEY HAKKINDA BİLGİLENDİRME VE AYRINTILI TALİMATLAR</h2>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --warn:#f59e0b;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+  }
+  .pg-wrap{max-width: 920px; margin: 0 auto;}
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color: #fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{margin:0; font-weight:800;}
+  .hero p{margin:6px 0 0 0; opacity:.92;}
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 600;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  @media (max-width: 768px){
+    .grid{grid-template-columns: 1fr;}
+  }
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+  }
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+    font-weight: 800;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 700;
+  }
+  .muted{color:var(--muted);}
+  .big{font-size: 1.05rem; font-weight: 800; color: var(--ink); margin: 6px 0 0 0;}
+  .formula{
+    background: #f1f5f9;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 800;
+    color: var(--ink);
+    text-align:center;
+    margin-top: 10px;
+  }
+  .list-clean{margin:0; padding-left: 18px;}
+  .list-clean li{margin: 6px 0;}
+  .rule{
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 12px 12px;
+  }
+  .example{
+    background: linear-gradient(135deg, #ecfeff, #f0f9ff);
+    border: 1px solid #bae6fd;
+    border-radius: 16px;
+    padding: 12px 14px;
+  }
+  .example strong{color:#0369a1;}
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .confirm{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .check{
+    width: 28px; height: 28px;
+    border-radius: 10px;
+    background: rgba(22,163,74,.12);
+    border: 1px solid rgba(22,163,74,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--ok);
+    font-weight: 900;
+  }
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 800 !important;
+  }
+</style>
 
-<p>
-Bu deneyde siz ve diğer katılımcılar bir <strong>kamu malı oyunu</strong> oynayacaksınız. Her turda size belirli miktarda <strong>başlangıç parası (jeton)</strong> verilecek. Bu jetonların bir kısmını kendinize ayırabilir, bir kısmını ise <strong>ortak havuza katkı</strong> olarak verebilirsiniz. 
+<div class="pg-wrap">
 
-<hr>
+  <div class="hero">
+    <h2>Deney Talimatları</h2>
+    <p>Kararlarınız <strong>gerçek ödeme</strong> ile ilişkilidir. Aşağıdaki özet oyunu anlamanız için yeterlidir.</p>
+    <div>
+      <span class="pill">👥 {{ group_size }} kişi</span>
+      <span class="pill">🔁 {{ num_rounds }} tur</span>
+      <span class="pill">🎯 {{ endowment }} jeton / tur</span>
+    </div>
+  </div>
 
-<h3>1) Deneyin Genel Yapısı</h3>
-<ul>
-  <li>Toplam tur sayısı: <strong>{{ num_rounds }}</strong></li>
-  <li>Her turdaki başlangıç parası: <strong>{{ endowment }}</strong> jeton</li>
-  <li>Grup büyüklüğü: <strong>{{ group_size }}</strong> kişi</li>
-  <li>Kamu malı çarpanı : <strong>{{ beta }}</strong></li>
-  <li>Ortak havuzun geri dönüş oranı (MPCR) ((Kamu malı çarpanı / Grup büyüklüğü)): <strong>{{ beta }} / {{ group_size }} = {{ mpcr_str }}</strong></li>
-  <li>Her jetonun TL karşılığı: <strong>{{ rate }} TL</strong></li>
-</ul>
+  <div class="grid">
 
-<p>Her tur aşağıdaki adımlarla ilerler:</p>
-<ol>
-  <li><strong>Karar Aşaması:</strong> {{ endowment }} jetondan 0 ile {{ endowment }} arasında bir miktarı ortak havuza verirsiniz; kalan jetonlar sizde kalır.</li>
-  <li><strong>Hesaplama Aşaması:</strong> Tüm grup üyelerinin katkıları toplanır ve MPCR ile çarpılır.</li>
-  <li><strong>Dağıtım Aşaması:</strong> Ortak havuzdan elde edilen toplam değer tüm grup üyelerine eşit olarak dağıtılır.</li>
-  <li><strong>Geri Bildirim Aşaması:</strong> Tur sonunda kendi katkınızı, grubun toplam katkısını ve tur kazancınızı görürsünüz.</li>
-</ol>
+    <div class="cardx">
+      <h3>Ne yapacaksınız? <span class="tag">Karar</span></h3>
+      <p class="muted">Her turda {{ endowment }} jeton alırsınız. Bir kısmını kendinize ayırır, bir kısmını <strong>Ortak Havuz</strong>a katkı yaparsınız.</p>
+      <p class="big">Katkı miktarını siz belirlersiniz.</p>
+    </div>
 
-<hr>
+    <div class="cardx">
+      <h3>Ortak havuz nasıl işler? <span class="tag">Kural</span></h3>
+      <ul class="list-clean">
+        <li>Herkesin katkısı toplanır.</li>
+        <li>Toplam katkı <strong>% 20</strong> oranında artırılır.</li>
+        <li>Ortaya çıkan miktar <strong>herkese eşit</strong> dağıtılır.</li>
+      </ul>
+      <p class="muted">Bireysel katkıları görmezsiniz.</p>
+    </div>
 
-<h3>2) Kazanç Formülü (Tur Bazında)</h3>
-
-<p style="margin-left: 24px;">
-<strong>Tur Kazancı (jeton)</strong> = <em>(Başlangıç Parası – Kendi Katkınız)</em> + <em>(MPCR × Grubun Toplam Katkısı)</em>
-</p>
-
-<ul>
-  <li><strong>Başlangıç Parası:</strong> {{ endowment }}</li>
-  <li><strong>Kendi Katkınız:</strong> 0 ile {{ endowment }} arası bir sayı</li>
-  <li><strong>Grubun Toplam Katkısı:</strong> Tüm üyelerin katkılarının toplamı</li>
-  <li><strong>MPCR:</strong> {{ mpcr_str }}</li>
-</ul>
-
-<p>
-<strong>Toplam Deney Kazancı (TL)</strong> = Katılım Ücreti + Başlangıç Bonusundan Ayırdığınız Miktar (varsa) + (Tüm Turların Toplam Jeton Kazancı × {{ rate }} TL)
-</p>
-
-<hr>
-
-<h3>3) Sayısal Örnek</h3>
-
-<p><u>Örnek Senaryo:</u></p>
-<ul>
-  <li>Size verilen {{ endowment }} jetondan <strong>{{ example_contribution }}</strong> katkı yaptınız.</li>
-  <li>Diğer herkes de <strong>{{ example_contribution }}</strong> katkı yaptı.</li>
-  <li>Toplam katkı: {{ example_contribution }} × {{ group_size }} = <strong>{{ total_contribution }}</strong></li>
-  <li>Tur kazancınız: ({{ endowment }} − {{ example_contribution }}) + ({{ mpcr_str }} × {{ total_contribution }}) = <strong>{{ example_payoff_str }}</strong> jeton</li>
-</ul>
-
-<hr>
-
-<h3>4) Arayüz ve Girdi Kuralları</h3>
-<ul>
-  <li>Karar alanına <strong>tam sayı</strong> girilmelidir (örn. 3, 7). Sistem yalnızca 0 ile {{ endowment }} arası değerleri kabul eder.</li>
-  <li>Yanlış veya boş girişlerde sistem uyarı verir.</li>
-</ul>
-
-<hr>
-
-<h3>5) Bağlantı Sorunları ve Ayrılma Durumu</h3>
-<ul>
-  <li><strong>Geçici bağlantı kesintisi:</strong> Sayfa otomatik yenilenir, yenilenmediğini düşündüğünüzde sayfayı elle kendiniz yenileyiniz. Kararınız kaybolursa sistem son geçerli kaydı esas alır.</li>
-  <li><strong>Kalıcı kesinti / ayrılma:</strong> Oturum sonlandırılır; ödeme etik kurallara göre yapılır.</li>
-</ul>
-
-<hr>
-
-<h3>6) Geri Bildirim ve Bilgi Görünürlüğü</h3>
-<ul>
-  <li>Her tur sonunda şunları görürsünüz: kendi katkınız, grup toplam katkısı, tur kazancınız.</li>
-  <li>Diğer kişilerin bireysel katkıları <strong>görünmez</strong>; yalnızca toplam katkı gösterilir.</li>
-  <li>Önceki turlara ait kendi sonuçlarınızı özet tabloda görebilirsiniz.</li>
-</ul>
-
-<hr>
-
-<h3>7) Davranış Kuralları</h3>
-<ul>
-  <li>Kararlar bireysel ve gizlidir; katılımcılar arası iletişim yasaktır.</li>
-  <li>Tekrarlı katılım, bilgi paylaşımı, ekran görüntüsü alma/paylaşma yasaktır.</li>
-  <li>Herhangi bir doğru/yanlış karar yoktur; önemli olan kendi tercihlerinizi yansıtmanızdır.</li>
-</ul>
-
-<hr>
-
-<h3>8) Ödeme Bileşenleri</h3>
-<ol>
-  <li><strong>Katılım ücreti:</strong> {{ participation_bonus }} TL (oturumu tamamlayan herkese)</li>
-  <li><strong>Başlangıç bonusu:</strong> Deney başında sağlanan 100 TL’den kendinize ayırdığınız miktar (varsa)</li>
-  <li><strong>Oyun kazancı:</strong> Tüm turlarda kazandığınız jetonların toplamı × {{ rate }} TL</li>
-</ol>
-<p>Toplam ödeme oturum bitiminde <strong>nakit</strong> olarak yapılır ve tarafınıza yazılı olarak bildirilir.</p>
-
-<hr>
-
-<h3>9) Sık Sorulan Sorular (SSS)</h3>
-<p><strong>S:</strong> Diğerleri çok katkı yaparsa ben katkı yapmasam daha mı iyi kazanırım?<br>
-<strong>C:</strong> Kazancınız hem kendi katkınıza hem de grubun toplam katkısına bağlıdır. Strateji tamamen size aittir.</p>
-
-<p><strong>S:</strong> Her tur önceki turları etkiliyor mu?<br>
-<strong>C:</strong> Turlar ekonomik olarak bağımsızdır; ancak toplam ödeme tüm turların toplam kazancına göre belirlenir.</p>
-
-<p><strong>S:</strong> Negatif veya {{ endowment }}’den büyük değer girebilir miyim?<br>
-<strong>C:</strong> Hayır. Sistem yalnızca 0 ile {{ endowment }} arası değerleri kabul eder.</p>
-
-<p><strong>S:</strong> Zamanım dolarsa?<br>
-<strong>C:</strong> Zaman kısıtı yoktur. Ancak herkes kararını girene kadar bir sonraki tura geçilemez.</p>
-
-<hr>
-
-<h3>10) Anladığınızı Doğrulayın (Kısa Kontrol)</h3>
-<ol>
-  <li>Bir turda {{ endowment }} jetonunuz var ve 0 katkı yaptınız. Grubun toplam katkısı {{ total_contribution }} ve MPCR {{ mpcr_str }} ise, tur kazancınız nasıl hesaplanır?</li>
-  <li>Oyun sıralı mı oynanır yoksa eş zamanlı mı?</li>
-  <li>Diğer katılımcıların bireysel katkılarını görebilir misiniz?</li>
-</ol>
-<p>Bu üç maddeyi zihninizde yanıtladıktan sonra ilerleyiniz. Sorunuz olursa görevliye danışabilirsiniz.</p>
-
-<hr>
+    <div class="cardx">
+      <h3>Tur kazancı <span class="tag">Ödeme</span></h3>
+      <div class="formula">
+        (Kendinize ayırdığınız) + (Havuzdan gelen pay)
+      </div>
+    </div>
 
 
-<p style="margin-top: 10px;">
-Talimatları dikkatle okudum ve anladım. Devam etmek için lütfen aşağıdaki “Devam Et” butonuna basınız.
-</p>
 
-{{ next_button }}
+  </div>
+
+  <!-- MINI ÖRNEK -->
+  <div class="example" style="margin-top:12px;">
+    <strong>Mini Örnek:</strong>
+    <p style="margin:6px 0 0 0;">
+      Herkes daha fazla katkı yaparsa, ortak havuz büyür ve <strong>herkesin aldığı pay artar</strong>.
+      Ancak siz daha az katkı yaparsanız, başkalarının katkılarından yine pay alırsınız.
+    </p>
+  </div>
+
+  <div class="rule" style="margin-top:12px;">
+    <p style="margin:0;">
+      <strong>Önemli:</strong> Diğer katılımcılarla <strong>konuşmayın</strong>. Doğru veya yanlış karar yoktur.
+    </p>
+  </div>
+
+  </div>
+    <div class="cardx">
+      <h3>Toplam ödeme <span class="tag">Nakit</span></h3>
+      <ul class="list-clean">
+        <li>Sabit katılım: <strong>{{ participation_bonus }} TL</strong></li>
+        <li>(Kümülatif)Oyun kazancı: Toplam jeton × <strong>{{ rate }} TL</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="confirm">
+      <span class="check">✓</span>
+      Talimatları okudum ve deneye başlamaya hazırım.
+    </div>
+    {{ next_button }}
+
 
 {% endblock %}

@@ -1,0 +1,309 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Deney Talimatları{% endblock %}
+
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+  }
+
+  .pg-wrap{max-width: 980px; margin: 0 auto;}
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{margin:0; font-weight: 700;}
+  .hero p{margin:6px 0 0 0; opacity:.92;}
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 500;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  @media (max-width: 900px){
+    .grid{grid-template-columns: 1fr;}
+  }
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+  }
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+    font-weight: 700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 700;
+  }
+  .muted{color: var(--muted);}
+  .italic{font-style: italic;}
+
+  .formula{
+    background:#f1f5f9;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align:center;
+    margin-top: 10px;
+  }
+  .list-clean{margin:0; padding-left: 18px;}
+  .list-clean li{margin: 6px 0;}
+  .example{
+    background: linear-gradient(135deg, #ecfeff, #f0f9ff);
+    border: 1px solid #bae6fd;
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin-top: 12px;
+  }
+  .example strong{color:#0369a1;}
+  .rule{
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 12px 12px;
+    margin-top: 12px;
+  }
+  .rule strong{color:#9a3412;}
+  .viz{
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 10px;
+  }
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .confirm{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .check{
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    background: rgba(22,163,74,.12);
+    border: 1px solid rgba(22,163,74,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--ok);
+    font-weight: 500;
+  }
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 500 !important;
+  }
+</style>
+
+<div class="pg-wrap">
+
+  <div class="hero">
+    <h2>Halka Ağı Bloku</h2>
+    <p>Bu bölümde her oyuncu iki komşusuyla bağlantılıdır.</p>
+    <div>
+      <span class="pill">👥 Grup: {{ group_size }} kişi</span>
+      <span class="pill">🔁 Toplam {{ num_rounds }} tur</span>
+      <span class="pill">📦 Bu blokta {{ rounds_per_block }} tur</span>
+      <span class="pill">🎯 {{ endowment }} jeton / tur</span>
+      <span class="pill">🔗 Komşu: {{ degree }} kişi</span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="cardx">
+      <h3>Ne yapacaksınız? <span class="tag">Karar</span></h3>
+      <p class="muted" style="margin:0;">
+        Her turda {{ endowment }} jeton alırsınız. Bunun bir kısmını kendinize ayırır,
+        bir kısmını <strong>Ortak Havuz</strong>a katkı olarak yatırırsınız.
+      </p>
+      <p class="italic">
+        Ortak havuza yapılan katkıların toplamını görebilirsiniz,
+        ancak bireysel katkıları göremezsiniz.
+      </p>
+    </div>
+
+    <div class="viz">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <div style="font-weight:900; color:var(--ink);">Halka Ağı Yapısı (Cycle)</div>
+        <div class="muted" style="font-weight:700;">Bu görsel yalnızca ağın genel yapısını göstermektedir.</div>
+      </div>
+
+      <div style="text-align:center; margin-top:10px;">
+        <svg id="cycle-svg" width="260" height="260" viewBox="0 0 300 300" aria-label="Cycle ağı şeması"
+             style="max-width:100%; border:1px dashed #e5e7eb; border-radius:12px; background:#fff;">
+        </svg>
+      </div>
+    </div>
+
+    <div class="cardx">
+      <h3>Ağın kuralı <span class="tag">Halka</span></h3>
+      <p class="muted" style="margin:0;">
+        Bu ağda ortak havuz <strong>komşular</strong> arasında paylaştırılır.
+      </p>
+      <div class="formula">
+        Komşuluk = Siz + {{ degree }} komşunuz = {{ neighborhood_size }} kişi
+      </div>
+    </div>
+
+    <div class="cardx">
+      <h3>Ortak havuz nasıl işler? <span class="tag">Kural</span></h3>
+      <ul class="list-clean">
+        <li>Sizin ve komşularınızın katkıları toplanır.</li>
+        <li>Toplam katkı <strong>{{ beta }}</strong> ile çarpılır.</li>
+        <li>Ortaya çıkan miktar <strong>komşuluktaki {{ neighborhood_size }} kişiye eşit</strong> dağıtılır.</li>
+      </ul>
+    </div>
+
+    <div class="cardx">
+      <h3>Tur kazancı <span class="tag">Ödeme</span></h3>
+      <div class="formula">
+        Tur kazancı = Kendinize ayırdığınız miktar + Havuzdan gelen pay
+      </div>
+    </div>
+
+  </div>
+
+  <div class="example">
+    <strong>Mini Örnek:</strong>
+    <p style="margin:6px 0 0 0;">
+      Siz ve komşularınız daha fazla katkı yaparsa ortak havuz büyür ve payınız artar.
+      Bu {{ group_size }} kişilik halka ağ yapısında herkes {{ degree }} komşuya bağlıdır.
+    </p>
+  </div>
+
+  <div class="cardx" style="margin-top:12px;">
+    <h3>Toplam ödeme <span class="tag">Nakit</span></h3>
+    <ul class="list-clean">
+      <li>Sabit katılım ücreti: <strong>{{ participation_bonus }} TL</strong></li>
+      <li>Oyun kazancı: Toplam jeton × <strong>{{ rate }} TL</strong></li>
+    </ul>
+  </div>
+
+  <div class="rule">
+    <p style="margin:0;">
+      <strong>Önemli:</strong> Diğer katılımcılarla <strong>konuşmayın</strong>. Doğru veya yanlış karar yoktur.
+    </p>
+  </div>
+
+  <div class="footer">
+    <div class="confirm">
+      <span class="check">✓</span>
+      Talimatları okudum ve deneye başlamaya hazırım.
+    </div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+<script id="cycle-nodes-data" type="application/json">{{ nodes_json }}</script>
+<script id="cycle-edges-data" type="application/json">{{ edges_json }}</script>
+<script id="cycle-you-id-data" type="application/json">{{ you_id_json }}</script>
+
+<script>
+(function(){
+  const nodes = JSON.parse(document.getElementById('cycle-nodes-data').textContent || '[]');
+  const edges = JSON.parse(document.getElementById('cycle-edges-data').textContent || '[]');
+  const youId = JSON.parse(document.getElementById('cycle-you-id-data').textContent || '0');
+
+  const svg = document.getElementById('cycle-svg');
+  if (!svg) return;
+
+  function el(name, attrs){
+    const e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      e.setAttribute(k, v);
+    }
+    return e;
+  }
+
+  edges.forEach(edge => {
+    const a = nodes.find(n => n.id === edge.source);
+    const b = nodes.find(n => n.id === edge.target);
+    if (!a || !b) return;
+
+    svg.appendChild(el('line', {
+      x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+      stroke: '#cbd5e1', 'stroke-width': 3
+    }));
+  });
+
+  nodes.forEach(n => {
+    const isYou = n.id === youId;
+    const g = el('g', {});
+
+    g.appendChild(el('circle', {
+      cx: n.x,
+      cy: n.y,
+      r: isYou ? 20 : 18,
+      fill: isYou ? '#dc2626' : '#9ca3af',
+      stroke: isYou ? '#991b1b' : '#6b7280',
+      'stroke-width': isYou ? 3 : 2
+    }));
+
+    const label = el('text', {
+      x: n.x,
+      y: n.y + 5,
+      'text-anchor': 'middle',
+      'font-size': 13,
+      'font-weight': 900,
+      fill: '#fff'
+    });
+    label.textContent = n.id;
+    g.appendChild(label);
+
+    svg.appendChild(g);
+  });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "global/Page.html" %}
+
+{% block title %}
+Katılımcı Bilgilendirme ve Gönüllü Onay Formu
+{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align:center;">KATILIMCI BİLGİLENDİRME VE GÖNÜLLÜ ONAY FORMU</h2>
+
+<p>
+    Bu bilimsel çalışmaya katılmayı düşündüğünüz için teşekkür ederiz.
+    Katılmadan önce aşağıdaki bilgileri dikkatlice okumanız önemlidir.
+</p>
+
+<p>
+    <strong>Sorumlu Araştırmacı:</strong> Arş. Gör. Emine Özge Yurdakurban<br>
+    <strong>Kurum:</strong> İstanbul Teknik Üniversitesi & Yeditepe Üniversitesi, Ekonomi Bölümü<br>
+    <strong>İletişim:</strong> eoyurdakurban@gmail.com
+</p>
+
+<hr>
+
+<h3>1. Çalışmanın Amacı</h3>
+<p>
+    Bu bilimsel çalışmada, insanların ekonomik kararlarını ve sosyal tercihlerini inceliyoruz.
+    Amacımız, bireylerin farklı durumlarda nasıl kararlar verdiğini daha iyi anlamaktır.
+    Elde edilecek veriler yalnızca akademik amaçlarla (tez, makale vb.) kullanılacaktır.
+</p>
+
+<h3>2. Çalışma Süreci (Sizi ne bekliyor?)</h3>
+<ul>
+    <li>Bu deney bilgisayar laboratuvarında gerçekleşecek ve yaklaşık <strong>40-60 dakika</strong> sürecektir.</li>
+    <li>Size bir dizi ekonomik karar verme görevi sunulacaktır.</li>
+    <li>Deney boyunca vereceğiniz kararlara göre <strong>gerçek para</strong> kazanacaksınız.
+        Kazancınız hem sizin kararlarınıza hem de diğer katılımcıların kararlarına bağlı olacaktır.</li>
+</ul>
+
+<h3>3. Gönüllülük Esası ve Katılımcı Hakları</h3>
+<ul>
+    <li>Bu çalışmaya katılım tamamen <strong>gönüllülük</strong> esasına dayanmaktadır.</li>
+    <li>Deneyin <strong>herhangi bir anında</strong>, hiçbir neden belirtmeksizin çalışmadan <strong>ayrılma hakkına</strong> sahipsiniz.</li>
+    <li>Çalışmadan çekilmeniz veya katılmamanız, size karşı (akademik veya idari) hiçbir olumsuz sonuca yol açmaz.</li>
+</ul>
+
+<h3>4. Gizlilik ve Veri Koruma (KVKK)</h3>
+<ul>
+    <li>Bu çalışma <strong>tamamen anonimdir</strong>.</li>
+    <li>Adınız, e-postanız veya kimliğinizi ortaya çıkaracak hiçbir kişisel bilgi toplanmayacaktır.</li>
+    <li>Tüm verileriniz şifrelenerek güvenli bir şekilde saklanacak ve 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında korunacaktır.</li>
+</ul>
+
+<h3>5. Ödeme Bilgileri</h3>
+<p>
+    Deneye katılımınız ve ayırdığınız zaman için bir ödeme alacaksınız. Bu ödeme iki bölümden oluşur:
+</p>
+<ol>
+    <li>Deneyi tamamladığınız için <strong>{{ participation_bonus }} TL sabit katılım ücreti</strong>.</li>
+    <li>Deney sırasındaki kararlarınızdan elde ettiğiniz <strong>ek oyun kazançları</strong>.</li>
+</ol>
+<p>
+    Toplam kazancınız (Katılım ücreti + Oyun kazançları) deneyin sonunda size nakit olarak ödenecektir.
+</p>
+
+<h3>6. Olası Riskler</h3>
+<p>
+    Bu çalışmaya katılmanın bilinen herhangi bir fiziksel veya psikolojik riski <strong>bulunmamaktadır</strong>.
+    Katılımınız, ekonomik davranışlar alanındaki bilimsel bilgiye katkı sağlayacaktır.
+</p>
+
+<hr>
+
+<h3>7. Katılımcı Onayı</h3>
+<p>
+    Aşağıdaki kutucuğu işaretleyerek, bu sayfadaki tüm bilgileri okuduğunuzu, anladığınızı ve bu araştırmaya <strong>gönüllü olarak katılmayı</strong> kabul ettiğinizi onaylamış olursunuz.
+</p>
+
+<div style="margin:12px 0;">
+    {{ formfield_errors 'consent_given' }}
+    {{ formfield 'consent_given' }}
+</div>
+
+<div style="margin-top:16px;">
+    {{ next_button }}
+</div>
+
+<hr>
+<p style="font-size:small; color:gray;">
+    Çalışma hakkında herhangi bir sorunuz olursa veya çekilmek isterseniz araştırmacı ile iletişime geçebilirsiniz:
+    <strong>eoyurdakurban@gmail.com</strong>
+</p>
+
+{% endblock %}

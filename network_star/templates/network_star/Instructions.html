@@ -1,0 +1,378 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+    --red:#ef4444;
+    --redDark:#991b1b;
+  }
+
+  .pg-wrap{max-width: 980px; margin: 0 auto;}
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{margin:0; font-weight: 900;}
+  .hero p{margin:6px 0 0 0; opacity:.92;}
+
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 700;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  @media (max-width: 900px){
+    .grid{grid-template-columns: 1fr;}
+  }
+
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+  }
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+    font-weight: 900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 800;
+  }
+
+  .muted{color: var(--muted);}
+
+  .formula{
+    background:#f1f5f9;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 10px 12px;
+    font-weight: 900;
+    color: var(--ink);
+    text-align:center;
+    margin-top: 10px;
+  }
+
+  .list-clean{margin:0; padding-left: 18px;}
+  .list-clean li{margin: 6px 0;}
+
+  .example{
+    background: linear-gradient(135deg, #ecfeff, #f0f9ff);
+    border: 1px solid #bae6fd;
+    border-radius: 16px;
+    padding: 12px 14px;
+    margin-top: 12px;
+  }
+  .example strong{color:#0369a1;}
+
+  .rule{
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 12px 12px;
+    margin-top: 12px;
+  }
+  .rule strong{color:#9a3412;}
+
+  .viz{
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 10px;
+  }
+
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .confirm{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .check{
+    width: 28px; height: 28px;
+    border-radius: 10px;
+    background: rgba(22,163,74,.12);
+    border: 1px solid rgba(22,163,74,.25);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--ok);
+    font-weight: 900;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<div class="pg-wrap">
+
+  <div class="hero">
+    <h2>Deney Talimatları — Star (Yıldız) Ağı</h2>
+    <p>Kararlarınız <strong>gerçek ödeme</strong> ile ilişkilidir. Bu sayfa oyunu anlamanız için yeterlidir.</p>
+    <div>
+      <span class="pill">👥 Grup: {{ group_size }} kişi</span>
+      <span class="pill">🔁 {{ num_rounds }} tur</span>
+      <span class="pill">🎯 {{ endowment }} jeton / tur</span>
+      <span class="pill">
+        ⭐ Rol:
+        {% if network_role == 'center' %}
+          <strong>Merkez</strong>
+        {% else %}
+          <strong>Çevre</strong>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- Görsel -->
+    <div class="viz" style="margin-top:12px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <div style="font-weight:900; color:var(--ink);">Ağ yapısı (Star)</div>
+        <div class="muted" style="font-weight:700;">Kırmızı düğüm <strong>sizsiniz</strong>.</div>
+      </div>
+      <div style="text-align:center; margin-top:10px;">
+        <svg id="star-svg" width="260" height="260" viewBox="0 0 300 300" aria-label="Star ağı şeması"
+             style="max-width:100%; border:1px dashed #e5e7eb; border-radius:12px; background:#fff;">
+        </svg>
+      </div>
+    </div>
+
+    <div class="cardx">
+      <h3>Ağın kuralı <span class="tag">Star</span></h3>
+      <p class="muted" style="margin:0;">
+        Havuzdan gelen payınız <strong>tüm grup</strong> üzerinden değil,
+        <strong>kapalı komşuluğunuz</strong> üzerinden hesaplanır.
+      </p>
+
+      <div class="formula">
+        Kapalı komşuluk = Siz + komşularınız = Toplam {{ neighborhood_size }} kişi
+      </div>
+
+      <div class="muted" style="margin-top:10px; font-weight:700;">
+        {% if network_role == 'center' %}
+          Merkez oyuncu: 2 komşu (iki çevre).
+        {% else %}
+          Çevre oyuncu: 1 komşu (merkez).
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="cardx">
+      <h3>Ne yapacaksınız? <span class="tag">Karar</span></h3>
+      <p class="muted" style="margin:0;">
+        Her turda {{ endowment }} jeton alırsınız. Bir kısmını kendinize ayırır,
+        bir kısmını <strong>komşuluğunuzla oluşturduğunuz Ortak Havuz</strong>a katkı yaparsınız.
+      </p>
+      <p class="big">Katkı miktarını siz belirlersiniz.</p>
+    </div>
+
+    <div class="cardx">
+      <h3>Ortak havuz nasıl işler? <span class="tag">Kural</span></h3>
+      <ul class="list-clean">
+        <li>Kapalı komşuluğunuzdaki katkılar toplanır.</li>
+        <li>Toplam katkı <strong>{{ beta }}</strong> ile artırılır.</li>
+        <li>Ortaya çıkan miktar <strong>kapalı komşuluktaki {{ neighborhood_size }}</strong> kişiye eşit dağıtılır.</li>
+      </ul>
+      <p class="muted">Bireysel katkıları görmezsiniz.</p>
+    </div>
+
+    <div class="cardx">
+      <h3>Tur kazancı <span class="tag">Ödeme</span></h3>
+      <div class="formula">
+        (Kendinize ayırdığınız) + (Kapalı komşuluk havuz payı)
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mini örnek (genel) -->
+  <div class="example">
+    <strong>Mini Örnek:</strong>
+    <p style="margin:6px 0 0 0;">
+      <strong>Merkez</strong> iseniz, havuz payınız iki çevre komşunuzun katkılarından da etkilenir.
+      <strong>Çevre</strong> iseniz, havuz payınız yalnızca <strong>merkez komşunuzun</strong> katkısıyla birlikte belirlenir.
+    </p>
+  </div>
+
+  <!-- ÖRNEK HESAPLAR (silmedim; sonra lazım olabilir) -->
+  <details class="cardx" style="margin-top:12px;">
+    <summary style="cursor:pointer; font-weight:900; color:var(--ink);">
+      (Opsiyonel) Örnek hesapları göster
+    </summary>
+
+    {% if ex1_pay_c_str %}
+      <div style="margin-top:10px;" class="muted">
+        Aşağıdaki örneklerde katkı = 10 varsayılmıştır. Merkez ve çevre için sonuçlar farklı olabilir.
+      </div>
+
+      <div class="cardx" style="margin-top:10px; box-shadow:none;">
+        <h3>Senaryo 1 <span class="tag">Herkes 10</span></h3>
+        <ul class="list-clean">
+          <li>Merkez payoff: <strong>{{ ex1_pay_c_str }}</strong></li>
+          <li>Çevre payoff: <strong>{{ ex1_pay_p_str }}</strong></li>
+        </ul>
+      </div>
+
+      <div class="cardx" style="margin-top:10px; box-shadow:none;">
+        <h3>Senaryo 2 <span class="tag">Herkes 0</span></h3>
+        <ul class="list-clean">
+          <li>Merkez payoff: <strong>{{ ex2_pay_c_str }}</strong></li>
+          <li>Çevre payoff: <strong>{{ ex2_pay_p_str }}</strong></li>
+        </ul>
+      </div>
+
+      <div class="cardx" style="margin-top:10px; box-shadow:none;">
+        <h3>Senaryo 3 <span class="tag">Siz 0, komşular 10</span></h3>
+        <ul class="list-clean">
+          <li>Merkez payoff: <strong>{{ ex3_pay_c_str }}</strong></li>
+          <li>Çevre payoff: <strong>{{ ex3_pay_p_str }}</strong></li>
+        </ul>
+      </div>
+
+      <div class="cardx" style="margin-top:10px; box-shadow:none;">
+        <h3>Senaryo 4 <span class="tag">Siz 10, komşular 0</span></h3>
+        <ul class="list-clean">
+          <li>Merkez payoff: <strong>{{ ex4_pay_c_str }}</strong></li>
+          <li>Çevre payoff: <strong>{{ ex4_pay_p_str }}</strong></li>
+        </ul>
+      </div>
+    {% else %}
+      <div style="margin-top:10px;" class="muted">
+        (Bilgi) Örnek hesaplar bu sürümde gösterilmiyor; daha sonra açılabilir.
+      </div>
+    {% endif %}
+  </details>
+
+  <!-- Toplam ödeme -->
+  <div class="cardx" style="margin-top:12px;">
+    <h3>Toplam ödeme <span class="tag">Nakit</span></h3>
+    <ul class="list-clean">
+      <li>Sabit katılım: <strong>{{ participation_bonus }} TL</strong></li>
+      <li>(Kümülatif) Oyun kazancı: Toplam jeton × <strong>{{ rate }} TL</strong></li>
+    </ul>
+  </div>
+
+  <div class="rule">
+    <p style="margin:0;">
+      <strong>Önemli:</strong> Diğer katılımcılarla <strong>konuşmayın</strong>. Doğru veya yanlış karar yoktur.
+    </p>
+  </div>
+
+  <div class="footer">
+    <div class="confirm">
+      <span class="check">✓</span>
+      Talimatları okudum ve deneye başlamaya hazırım.
+    </div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const nodes = {{ nodes|json }};
+  const edges = {{ edges|json }};
+  const myId = {{ my_id|json }};
+  const svg = document.getElementById('star-svg');
+  if (!svg) return;
+
+  function el(name, attrs){
+    const e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+    return e;
+  }
+
+  // edges
+  edges.forEach(edge => {
+    const a = nodes.find(n => n.id === edge.source);
+    const b = nodes.find(n => n.id === edge.target);
+    if (!a || !b) return;
+    svg.appendChild(el('line', {
+      x1: a.x, y1: a.y, x2: b.x, y2: b.y,
+      stroke: '#cbd5e1', 'stroke-width': 3
+    }));
+  });
+
+  // nodes
+  nodes.forEach(n => {
+    const r = 22;
+    const g = el('g', {});
+    const isMe = (n.id === myId);
+
+    const fillColor = isMe ? '#ef4444' : '#9ca3af';
+    const strokeColor = isMe ? '#991b1b' : '#6b7280';
+    const strokeWidth = isMe ? 3 : 1.5;
+
+    g.appendChild(el('circle', {
+      cx: n.x, cy: n.y, r: r,
+      fill: fillColor, stroke: strokeColor, 'stroke-width': strokeWidth
+    }));
+
+    const label = el('text', {
+      x: n.x, y: n.y + 7,
+      'text-anchor': 'middle',
+      'font-size': 13,
+      'font-weight': 'bold',
+      fill: isMe ? '#7f1d1d' : '#003366'
+    });
+
+    const roleText = (n.role === 'center') ? 'Merkez' : 'Çevre';
+    label.textContent = `Oyuncu ${n.id} (${roleText})`;
+
+    g.appendChild(label);
+    svg.appendChild(g);
+  });
+})();
+</script>
+
+{% endblock %}

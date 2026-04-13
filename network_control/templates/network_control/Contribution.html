@@ -1,88 +1,281 @@
 {% extends "global/Page.html" %}
+{% block title %}Tur {{ round_num }} - Katkı Kararı{% endblock %}
 {% block content %}
 
-<h2 style="text-align:center;">{{ round_num }}. Tur — Katkı Kararı</h2>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --warn:#dc2626;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+    --amber:#ca8a04;
+    --amberbg:#fffbe6;
+    --amberline:#fde047;
+  }
 
-<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin:10px 0 16px 0;">
-  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
-    <div style="font-size:0.9em; color:#6b7280;">Başlangıç (jeton)</div>
-    <div style="font-size:1.25em; font-weight:600;">{{ endowment }}</div>
-  </div>
+  .pg-wrap{max-width: 980px; margin: 0 auto;}
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{margin:0; font-weight: 900;}
+  .hero p{margin:6px 0 0 0; opacity:.92; line-height: 1.5;}
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 800;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
 
-  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
-    <div style="font-size:0.9em; color:#6b7280;">Grup Büyüklüğü</div>
-    <div style="font-size:1.25em; font-weight:600;">{{ group_size }}</div>
-  </div>
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+    margin-top: 12px;
+  }
+  .title-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0;
+    color: var(--ink);
+    font-weight: 900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 900;
+    white-space: nowrap;
+  }
 
-  <div style="border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fafafa;">
-    <div style="font-size:0.9em; color:#6b7280;">Ortak Havuzun Getiri Katsayısı</div>
-    <div style="font-size:1.25em; font-weight:600;">{{ mpcr_str }}</div>
-    <div style="font-size:0.85em; color:#6b7280; margin-top:4px;">
-      (Her 1 jeton ortak havuza yatırıldığında, grup toplam kazancına <strong>{{ beta }}</strong> jeton eklenir; kişi başına <strong>{{ mpcr_str }}</strong> jeton)
+  .muted{color: var(--muted);}
+
+  .summary{
+    margin-top: 10px;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    text-align:center;
+  }
+  .summary .k{color: var(--muted); font-weight: 800;}
+  .summary .v{font-weight: 900; font-size: 1.05rem;}
+  .v-red{color: #dc2626;}
+  .v-green{color: #16a34a;}
+
+  .warn{
+    margin-top: 6px;
+    color: var(--warn);
+    font-weight: 800;
+    font-size: .92rem;
+  }
+
+  .reminder{
+    background: var(--amberbg);
+    border: 1px solid var(--amberline);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+    margin-top: 12px;
+  }
+  .reminder h4{
+    margin:0 0 6px 0;
+    color: var(--amber);
+    font-weight: 900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .formula{
+    margin: 8px 0 0 0;
+    padding: 10px 12px;
+    background:#fff;
+    border: 1px dashed #e5e7eb;
+    border-radius: 14px;
+    font-weight: 900;
+    color: var(--ink);
+  }
+  .smallnote{
+    margin-top: 8px;
+    font-size:.92rem;
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-note{
+    color: var(--muted);
+    font-weight: 800;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 900 !important;
+  }
+</style>
+
+<div class="pg-wrap">
+
+  <div class="hero">
+    <h2>Tur {{ round_num }} / {{ C.NUM_ROUNDS }} — Katkı Kararı</h2>
+    <p>
+      Bu tur için başlangıç bütçeniz <strong>{{ endowment }} jetondur</strong>.
+      0 ile {{ endowment }} arasında bir tam sayı seçerek <strong>Ortak Havuz</strong>'a katkınızı belirleyin.
+    
+    </p>
+    <div>
+      <span class="pill">🪙 Bütçe: {{ endowment }}</span>
     </div>
   </div>
+
+  <div class="cardx">
+    <div class="title-row">
+      <h3>Kararınız</h3>
+      <span class="tag">0–{{ endowment }}</span>
+    </div>
+
+    <div style="margin-top: 10px;">
+      <label for="contribution_input" class="form-label" style="font-weight: 900; color: var(--ink);">
+        Ortak Havuza Katkınız (0 - {{ endowment }}):
+      </label>
+
+      <input
+        type="number"
+        name="contribution"
+        id="contribution_input"
+        min="0"
+        max="{{ endowment }}"
+        step="1"
+        value="{{ contribution }}"
+        style="width:100%;"
+        oninput="updateContribution()"
+        required
+        class="form-control form-control-lg"
+      >
+
+      <div id="contribution_warning" class="warn"></div>
+    </div>
+
+    <div class="summary">
+      <div>
+        <div class="k">Ortak Havuza Katkınız</div>
+        <div class="v v-red"><span id="live_c">{{ contribution }}</span> jeton</div>
+      </div>
+      <div style="height: 24px; width:1px; background: var(--line);"></div>
+      <div>
+        <div class="k">Size Kalacak</div>
+        <div class="v v-green"><span id="live_keep"></span> jeton</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reminder">
+    <h4>⏱ Hatırlatma: Kazanç Formülü</h4>
+    <div class="muted">Bu turdaki kazancınız şu şekilde hesaplanacaktır:</div>
+
+    <div class="formula">
+      Kazanç = ({{ endowment }} − Sizin Katkınız) + (({{ beta }} × Grubun Toplam Katkısı)/{{ group_size }})
+    </div>
+
+<div class="smallnote">
+  <ul class="note-list">
+    <li>Grubun Toplam Katkısı, <em>sizin katkınız</em> ve <em>gruptaki diğer 2 kişinin katkıları</em> toplamıdır.</li>
+    <li>Bu katkı Ortak Havuzda %20 değerlenerek (1,2 ile çarpılarak) gruptaki herkese eşit olarak dağıtılır (3’e bölünür).</li>
+    <li>Dolayısıyla Ortak Havuza yapılan her 1 jeton 0.40 olarak geri döner.</li>
+  </ul>
 </div>
 
-<p>
-Bu turda <strong>{{ endowment }}</strong> jetonunuz var.
-<em>0</em> ile <em>{{ endowment }}</em> arasında istediğiniz miktarı
-<strong>ortak havuza</strong> katkı olarak verebilirsiniz.
-Kalan jetonlar bireysel kazancınızda kalır.
-</p>
+    
+  </div>
 
-<hr style="margin:16px 0;">
+  <div class="footer">
+    <div class="footer-note">
+          Katkı kararınızı girdikten sonra “Devam Et” butonuna basınız.
+    </div>
+    {{ next_button }}
+  </div>
 
-<h3>1) Katkınızı Sayı Girerek Belirtin</h3>
-
-<div style="margin-bottom:12px;">
-  <input type="number" name="contribution" min="0" max="{{ endowment }}" step="1"
-         value="{{ contribution }}" style="width:100%;" oninput="updateContribution()" required>
-  <div style="font-size:0.85em; color:#6b7280; margin-top:4px;">(0 – {{ endowment }} aralığı)</div>
 </div>
-
-<!-- Canlı geri bildirim -->
-<div style="margin-top:12px; padding:12px; border:1px solid #e5e7eb; border-radius:12px; background:#f9fafb;">
-  <div>Seçtiğiniz katkı: <strong id="live_c">{{ contribution }}</strong> jeton</div>
-<div>Sizde kalacak: <strong id="live_keep"></strong> jeton</div>
-</div>
-
-<hr style="margin:16px 0;">
-
-<h3>2) Bilgilendirme: Kazanç Formülü</h3>
-<p style="margin-bottom:6px;">Bu turdaki kazancınız şu formülle hesaplanır:</p>
-<p style="margin-left:20px;">
-  <strong>Kazanç = ({{ endowment }} − Katkınız) + ({{ mpcr_str }} × Toplam Grup Katkısı)</strong>
-</p>
-<p style="font-size:0.9em; color:#6b7280; margin-top:6px;">
-  Daha fazla katkı, grubun toplam kazancını artırır; ancak bireysel kazancınızı azaltabilir.
-  Her turda stratejik bir karar vermeniz beklenir.
-</p>
-
-<hr style="margin:16px 0;">
-
-<h3>3) Devam</h3>
-<p>Seçiminizden emin olduğunuzda “<strong>Devam Et</strong>” butonuna basınız.</p>
-
-{{ next_button }}
 
 <script>
 (function(){
-  const endowment = {{ endowment|json }};;
+  const endowment = {{ endowment|json }};
   const field = document.querySelector('input[name="contribution"]');
   const liveC = document.getElementById('live_c');
   const liveKeep = document.getElementById('live_keep');
+  const warning = document.getElementById('contribution_warning');
 
   function clamp(x, lo, hi){ return Math.max(lo, Math.min(hi, Number(x)||0)); }
 
-  function updateContribution(){
-    const value = clamp(field.value, 0, endowment);
+  function _update(){
+    if (!field) return;
+    let value = clamp(field.value, 0, endowment);
+
+    // tamsayı güvenliği
+    value = Math.round(value);
+
+    if (value < 0) value = 0;
+    if (value > endowment) value = endowment;
+
+    if (String(field.value) !== '' && Number(field.value) !== value) {
+      // kullanıcının girdisini güvenli aralıkta tut
+      field.value = value;
+    }
+
     if (liveC) liveC.textContent = value;
-    if (liveKeep) liveKeep.textContent = (endowment - value).toFixed(0);
+    if (liveKeep) liveKeep.textContent = (endowment - value);
+
+    if (warning) warning.textContent = '';
   }
 
+  // HTML oninput çağrısı için global expose
+  window.updateContribution = _update;
+
   if (field) {
-    field.addEventListener('input', updateContribution);
-    updateContribution();
+    field.addEventListener('input', _update);
+    document.addEventListener('DOMContentLoaded', _update);
   }
 })();
 </script>

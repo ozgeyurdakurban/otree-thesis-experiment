@@ -9,17 +9,9 @@ class Consent(Page):
         return self.player.round_number == 1
 
     def vars_for_template(self):
-        group = self.player.group
-        mpcr = group.mpcr
         return dict(
-            num_rounds=C.NUM_ROUNDS,
-            endowment=C.ENDOWMENT,
-            beta=C.BETA,
-            group_size=C.PLAYERS_PER_GROUP,
-            mpcr_str=f"{mpcr:.3f}",
             participation_bonus=self.session.config.get('participation_fee', 0),
-            rate=self.session.config.get('real_world_currency_per_point', C.CONVERSION_RATE),
-        )
+            )
 
 class Instructions(Page):
     def is_displayed(self):
@@ -27,11 +19,35 @@ class Instructions(Page):
 
     def vars_for_template(self):
         group = self.player.group
-        example_contribution = 10
         group_size = C.PLAYERS_PER_GROUP
-        total_contribution = example_contribution * group_size
         mpcr = group.mpcr
-        example_payoff = (C.ENDOWMENT - example_contribution) + mpcr * total_contribution
+        
+# --- ÖRNEKLER       
+        ex1_c = 10
+        ex1_total_c = ex1_c * group_size
+        ex1_keep = C.ENDOWMENT - ex1_c
+        ex1_public_return = mpcr * ex1_total_c
+        ex1_payoff = ex1_keep + ex1_public_return
+
+        ex2_c = 0
+        ex2_total_c = ex2_c * group_size  
+        ex2_keep = C.ENDOWMENT - ex2_c
+        ex2_public_return = mpcr * ex2_total_c
+        ex2_payoff = ex2_keep + ex2_public_return
+
+        ex3_c = 0
+        ex3_others_c = 10
+        ex3_total_c = (group_size - 1) * ex3_others_c + ex3_c
+        ex3_keep = C.ENDOWMENT - ex3_c
+        ex3_public_return = mpcr * ex3_total_c
+        ex3_payoff = ex3_keep + ex3_public_return
+
+        ex4_c = 10
+        ex4_others_c = 0
+        ex4_total_c = (group_size - 1) * ex4_others_c + ex4_c
+        ex4_keep = C.ENDOWMENT - ex4_c
+        ex4_public_return = mpcr * ex4_total_c
+        ex4_payoff = ex4_keep + ex4_public_return
 
         return dict(
             num_rounds=C.NUM_ROUNDS,
@@ -40,41 +56,35 @@ class Instructions(Page):
             rate=self.session.config.get('real_world_currency_per_point', C.CONVERSION_RATE),
             beta=C.BETA,
             group_size=group_size,
-            mpcr_str=f"{mpcr:.3f}",
-            example_contribution=example_contribution,
-            total_contribution=total_contribution,
-            example_payoff_str=f"{example_payoff:.3f}",
+            mpcr_str=f"{mpcr:.2f}",  
+            
+            ex1_c=ex1_c,
+            ex1_total_c=ex1_total_c,
+            ex1_keep=ex1_keep,
+            ex1_public_return_str=f"{ex1_public_return:.2f}",
+            ex1_payoff_str=f"{ex1_payoff:.2f}",
+            
+            ex2_c=ex2_c,
+            ex2_total_c=ex2_total_c,
+            ex2_keep=ex2_keep,
+            ex2_public_return_str=f"{ex2_public_return:.2f}",
+            ex2_payoff_str=f"{ex2_payoff:.2f}",
+
+            ex3_c=ex3_c,
+            ex3_others_c=ex3_others_c,
+            ex3_total_c_str=f"{ex3_total_c:.2f}",
+            ex3_keep=ex3_keep,
+            ex3_public_return_str=f"{ex3_public_return:.2f}",
+            ex3_payoff_str=f"{ex3_payoff:.2f}",
+
+            ex4_c=ex4_c,
+            ex4_others_c=ex4_others_c,
+            ex4_total_c_str=f"{ex4_total_c:.2f}",
+            ex4_keep=ex4_keep,
+            ex4_public_return_str=f"{ex4_public_return:.2f}",
+            ex4_payoff_str=f"{ex4_payoff:.2f}",
         )
 
-class AltruismMeasure(Page):
-    form_model = 'player'
-    form_fields = ['dg_amount', 'svo_importance']
-
-    def is_displayed(self):
-        return self.player.round_number == 1
-
-    def vars_for_template(self):
-        dg = self.player.field_maybe_none('dg_amount') or 0
-        svo = self.player.field_maybe_none('svo_importance') or 5
-        dg_keep = 100 - dg
-
-        return dict(dg=dg, svo=svo, dg_keep=dg_keep)
-
-    def error_message(self, values):
-        errors = []
-        dg = values.get('dg_amount')
-        svo = values.get('svo_importance')
-
-        if dg is None or not (0 <= dg <= 100):
-            errors.append('Lütfen 0 ile 100 TL arasında bir miktar seçiniz.')
-        elif dg % 10 != 0:
-            errors.append('Lütfen yalnızca 10’un katı olan bir miktar giriniz (örn. 0, 10, 20, ..., 100).')
-
-        if svo is None or not (0 <= svo <= 10):
-            errors.append('Lütfen 0 ile 10 arasında bir değer seçiniz.')
-
-        if errors:
-            return ' '.join(errors)
 
 class Contribution(Page):
     form_model = 'player'
@@ -83,15 +93,19 @@ class Contribution(Page):
     def vars_for_template(self):
         group = self.player.group
         mpcr = group.mpcr
+        group_size = C.PLAYERS_PER_GROUP
+        other_players_count = group_size - 1
+
         return dict(
             round_num=self.player.round_number,
             endowment=C.ENDOWMENT,
             beta=C.BETA,
             degree=self.player.degree,
             mpcr=mpcr,
-            mpcr_str=f"{mpcr:.3f}",
-            group_size=C.PLAYERS_PER_GROUP,
-            contribution=self.player.field_maybe_none('contribution') or 0
+            mpcr_str=f"{mpcr:.2f}",
+            group_size=group_size,
+            contribution=self.player.field_maybe_none('contribution') or 0,
+            other_players_count=other_players_count
         )
 
 class WaitForAll(WaitPage):
@@ -111,6 +125,7 @@ class Results(Page):
         rounds = self.player.in_all_rounds()
         table_cols = []
         cum_payoff = 0
+        group_size = C.PLAYERS_PER_GROUP
 
         for rp in rounds:
             g = rp.group
@@ -130,7 +145,7 @@ class Results(Page):
                 others_contribution=others_c,
                 total_contribution=total_c,
                 mpcr=mpcr,
-                mpcr_str=f"{mpcr:.3f}",  
+                mpcr_str=f"{mpcr:.2f}",  
                 keep=keep,
                 public_return=public_return,
                 public_return_str=str(round(public_return)),  
@@ -156,6 +171,8 @@ class Results(Page):
             rate=rate,
             cols=table_cols,
             this_round_sentence=sentence,
+            group_size=group_size,
+            beta=C.BETA,
         )
     
 class FinalResults(Page):
@@ -184,7 +201,7 @@ class FinalResults(Page):
                 your_contribution=your_c,
                 total_contribution=total_c,
                 mpcr=mpcr,
-                mpcr_str=f"{mpcr:.3f}",  
+                mpcr_str=f"{mpcr:.2f}",  
                 keep=keep,
                 public_return=public_return,
                 public_return_str=str(round(public_return)),  
@@ -201,12 +218,8 @@ class FinalResults(Page):
         total_tokens = cum_payoff
         total_tl_from_game = total_tokens * rate
 
-        try:
-            dg_given = self.player.in_round(1).dg_amount or 0
-        except Exception:
-            dg_given = 0
-        retained_amount = 100 - dg_given
-        grand_total_tl = total_tl_from_game + retained_amount + participation_bonus
+
+        grand_total_tl = total_tl_from_game  + participation_bonus
 
         return dict(
             participant_code=self.participant.code,
@@ -219,7 +232,6 @@ class FinalResults(Page):
             total_tl_from_game_str=str(round(total_tl_from_game)),
             participation_bonus=participation_bonus,
             participation_bonus_str=str(round(participation_bonus)),
-            retained_amount=retained_amount,
             grand_total_tl=grand_total_tl,
             grand_total_tl_str=str(round(grand_total_tl)),
         )
@@ -239,6 +251,18 @@ class Demographics(Page):
     def is_displayed(self):
         return self.player.round_number == C.NUM_ROUNDS
     
+    
+class AltruismMeasure(Page):
+    def is_displayed(self):
+        return self.player.round_number == C.NUM_ROUNDS    
+    form_model = 'player'
+    form_fields = (
+        ['svo_a1', 'svo_a2', 'svo_a3']
+        + [f'pt_b{i}' for i in range(1, 11)]
+        + ['alt_c1', 'alt_c2']
+    )
+
+        
 class ThankYou(Page):
     def is_displayed(self):
         return self.player.round_number == C.NUM_ROUNDS
@@ -247,11 +271,12 @@ class ThankYou(Page):
 page_sequence = [
     Consent,
     Instructions,
-    AltruismMeasure,
     Contribution,
     WaitForAll,
     Results,
     FinalResults,
     Demographics,
+    AltruismMeasure,
     ThankYou,
+
 ]
