@@ -349,11 +349,10 @@ class Player(BasePlayer):
     )
 
     # --------------------------------------------------------
-    # Section A: SVO
+    # Section A: Charity dictator game
     # --------------------------------------------------------
-    svo_a1 = models.StringField(choices=['A', 'B', 'C'])
-    svo_a2 = models.StringField(choices=['A', 'B', 'C'])
-    svo_a3 = models.StringField(choices=['A', 'B', 'C'])
+    charity_d1 = models.IntegerField(min=0, max=100)
+
 
     # --------------------------------------------------------
     # Section B: Likert items
@@ -376,9 +375,11 @@ class Player(BasePlayer):
     alt_c2 = models.IntegerField(min=0, max=10)
 
     # --------------------------------------------------------
-    # Section D: Charity dictator game
+    # Section D: SVO
     # --------------------------------------------------------
-    charity_d1 = models.IntegerField(min=0, max=100)
+    svo_a1 = models.StringField(choices=['A', 'B', 'C'])
+    svo_a2 = models.StringField(choices=['A', 'B', 'C'])
+    svo_a3 = models.StringField(choices=['A', 'B', 'C'])
 
     # --------------------------------------------------------
     # Demographics
@@ -906,9 +907,10 @@ class Demographics(Page):
 class AltruismMeasure(Page):
     form_model = 'player'
     form_fields = (
-        ['svo_a1', 'svo_a2', 'svo_a3']
+        ['charity_d1']
         + [f'pt_b{i}' for i in range(1, 11)]
-        + ['alt_c1', 'alt_c2', 'charity_d1']
+        + ['alt_c1', 'alt_c2']
+        + ['svo_a1', 'svo_a2', 'svo_a3']
     )
 
     @staticmethod
