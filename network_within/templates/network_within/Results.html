@@ -215,8 +215,6 @@
 <div class="pg">
 
   <div class="hero">
-    <p>Bu turdaki katkınızın sonucu aşağıda özetlenmiştir.</p>
-
     <div>
       <span class="pill">
         Bu turun yapısı:
@@ -228,13 +226,25 @@
           Yıldız Ağı
         {% endif %}
       </span>
-      <span class="pill">Turdaki toplam katkı: {{ neigh_total_contribution }}</span>
+
+      <span class="pill">
+        Bu turdaki rolünüz:
+          {% if network_role == 'center' %}
+            Merkez
+          {% elif network_role == 'periphery' %}
+            Çevre
+          {% else %}
+            Üye
+          {% endif %}
+      </span>
+
+      
       <span class="pill">Paylaşılan kişi sayısı: {{ neigh_size }}</span>
     </div>
   </div>
 
   <div class="info">
-    <div class="title">Bu Turun Özeti</div>
+    <div class="title"><strong>Bu Turun Özeti</strong></div>
     <div class="text">{{ this_round_sentence }}</div>
   </div>
 
@@ -283,12 +293,6 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Başlangıç bütçesi</td>
-        {% for c in cols %}
-          <td>{{ c.endowment }}</td>
-        {% endfor %}
-      </tr>
 
       <tr>
         <td>Sizin katkınız</td>
@@ -297,19 +301,7 @@
         {% endfor %}
       </tr>
 
-      <tr class="highlight">
-        <td>Sizde kalan</td>
-        {% for c in cols %}
-          <td>{{ c.keep }}</td>
-        {% endfor %}
-      </tr>
 
-      <tr>
-        <td>Diğerlerinin toplam katkısı</td>
-        {% for c in cols %}
-          <td>{{ c.others_contribution }}</td>
-        {% endfor %}
-      </tr>
 
       <tr>
         <td>Toplam katkı</td>
@@ -318,12 +310,6 @@
         {% endfor %}
       </tr>
 
-      <tr>
-        <td>Paylaşılan kişi sayısı</td>
-        {% for c in cols %}
-          <td>{{ c.neighborhood_size }}</td>
-        {% endfor %}
-      </tr>
 
       <tr class="highlight">
         <td>Havuzdan gelen pay</td>

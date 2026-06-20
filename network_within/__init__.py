@@ -13,7 +13,7 @@ Treatments:
 - star
 
 Structure:
-- 3 treatments × 3 rounds = 9 rounds total
+- 3 treatments × 6 rounds = 18 rounds total
 - Each player receives 15 tokens per round
 - Payoff = (endowment - own contribution)
            + BETA × (closed neighborhood contribution / neighborhood size)
@@ -31,10 +31,10 @@ class C(BaseConstants):
     ENDOWMENT_INT = 15
     ENDOWMENT = cu(ENDOWMENT_INT)
 
-    BETA = 1.2
+    BETA = 1.5
     CONVERSION_RATE = 1.0
 
-    ROUNDS_PER_BLOCK = 3
+    ROUNDS_PER_BLOCK = 6
     BLOCKS = ['control', 'cycle', 'star']
     NUM_ROUNDS = ROUNDS_PER_BLOCK * len(BLOCKS)
 
@@ -220,7 +220,7 @@ class Group(BaseGroup):
         # Doğru olan: block içindeki sıra
         star_round_index = get_block_round(self.round_number) - 1
 
-        center_id = center_order[star_round_index]
+        center_id = center_order[star_round_index % len(center_order)]
         center = self.get_player_by_id(center_id)
 
         periphery = [p for p in players if p.id_in_group != center_id]
@@ -879,6 +879,8 @@ class Results(Page):
             round_num=player.round_number,
             network_type=network_type,
             rate=rate,
+            
+            network_role=player.field_maybe_none('network_role') or '',
 
             cols=rows,
             this_round_sentence=sentence,
