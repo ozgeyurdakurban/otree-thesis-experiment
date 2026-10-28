@@ -16,7 +16,7 @@ class C(BaseConstants):
     ENDOWMENT_INT = 15
     ENDOWMENT = cu(ENDOWMENT_INT)
 
-    BETA = 1.2
+    BETA = 1.5
     CONVERSION_RATE = 1.0
 
 

@@ -1,0 +1,154 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Demografik Bilgiler{% endblock %}
+
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+
+    --brand:#003366;
+    --brand2:#0d6efd;
+
+    --card:#ffffff;
+    --bg:#f8fafc;
+  }
+
+  .pg{
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 6px 6px;
+  }
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+  }
+  .hero h2{
+    margin:0;
+    font-weight:500;
+  }
+  .hero p{
+    margin:6px 0 0 0;
+    opacity:.94;
+    font-weight:500;
+    line-height:1.45;
+  }
+
+  .cardx{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    background:var(--card);
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+  }
+
+  .section-title{
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 6px 0;
+    font-size:1.05rem;
+  }
+
+  .section-text{
+    color:var(--muted);
+    font-weight:500;
+    line-height:1.5;
+    margin-bottom: 12px;
+  }
+
+  .formblock{
+    margin-top: 14px;
+    padding: 12px;
+    border:1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .footer{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+
+  .footer-note{
+    color:var(--muted);
+    font-weight:500;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 500 !important;
+  }
+</style>
+
+<div class="pg">
+
+  <!-- ===================================================== -->
+  <!-- Üst başlık -->
+  <!-- ===================================================== -->
+  <div class="hero">
+    <p>
+      Lütfen aşağıdaki soruları yanıtlayınız. Verileriniz anonim olarak saklanacak
+      ve yalnızca bilimsel amaçlarla kullanılacaktır.
+    </p>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- Form alanları -->
+  <!-- ===================================================== -->
+  <div class="cardx">
+
+    <div class="formblock">
+      {{ formfield 'age' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'gender' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'field_of_study' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'year_of_study' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'cgpa' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'monthly_income' }}
+    </div>
+
+    <div class="formblock">
+      {{ formfield 'risk_attitude' }}
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- Alt alan -->
+  <!-- ===================================================== -->
+  <div class="footer">
+    <div class="footer-note">
+      Tüm soruları tamamladıktan sonra devam ediniz.
+    </div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+{% endblock %}

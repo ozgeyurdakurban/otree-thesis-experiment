@@ -1,0 +1,397 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Deney Sonu Ödeme Özeti{% endblock %}
+
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+
+    --brand:#003366;
+    --brand2:#0d6efd;
+
+    --redbg:#fff1f2;
+    --greenbg:#f0fdf4;
+    --bluebg:#eff6ff;
+    --amberbg:#fff7ed;
+    --purplebg:#faf5ff;
+
+    --card:#ffffff;
+    --bg:#f8fafc;
+  }
+
+  .pg{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 6px 6px;
+  }
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+  }
+  .hero h2{
+    margin:0;
+    font-weight:700;
+  }
+  .hero p{
+    margin:6px 0 0 0;
+    opacity:.94;
+    font-weight:500;
+    line-height:1.45;
+  }
+
+  .pill{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.16);
+    color:#fff;
+    font-weight:500;
+    font-size:.84rem;
+    margin-right:6px;
+    margin-top:8px;
+  }
+
+  .info{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+    margin-bottom:12px;
+  }
+  .info .title{
+    font-weight:500;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .info .text{
+    color:var(--ink);
+    font-weight:500;
+    font-size:.96rem;
+    line-height:1.5;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    margin: 10px 0 12px 0;
+  }
+  @media (max-width:1000px){
+    .cards{grid-template-columns: repeat(2, 1fr);}
+  }
+  @media (max-width:700px){
+    .cards{grid-template-columns:1fr;}
+  }
+
+  .kpi{
+    border-radius:14px;
+    padding:14px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-weight:500;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+  }
+  .kpi.red{background:var(--redbg);}
+  .kpi.green{background:var(--greenbg);}
+  .kpi.blue{background:var(--bluebg);}
+  .kpi.amber{background:var(--amberbg);}
+  .kpi.purple{background:var(--purplebg);}
+
+  .kpi .label{
+    color:var(--muted);
+    font-size:0.9em;
+    font-weight:500;
+  }
+  .kpi .val{
+    font-size:1.55em;
+    margin-top:6px;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .kpi .sub{
+    font-size:0.9em;
+    color:var(--muted);
+    margin-top:4px;
+    font-weight:500;
+    line-height:1.35;
+  }
+
+  .box{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .04);
+    margin-top: 12px;
+  }
+  .box h3{
+    margin:0 0 8px 0;
+    font-weight:500;
+    color:var(--ink);
+    font-size:1.02rem;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  th, td{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:center;
+    font-size:0.95rem;
+    vertical-align:middle;
+  }
+  th:first-child, td:first-child{
+    text-align:left;
+    font-weight:700;
+    color: var(--muted);
+    width: 28%;
+  }
+  thead th{
+    background:#f1f5f9;
+    font-weight:700;
+  }
+  tr.highlight{
+    background:#f8fafc;
+    font-weight:700;
+  }
+
+  .note{
+    margin-top:10px;
+    font-size:0.9em;
+    color:#64748b;
+    font-weight:500;
+    line-height:1.45;
+  }
+
+  .footer{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .footer-note{
+    color:var(--muted);
+    font-weight:500;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 700 !important;
+  }
+</style>
+
+<div class="pg">
+
+  <div class="hero">
+    <p>Deney tamamlandı. Aşağıda oyun performansınız ve toplam ödemeniz özetlenmiştir.</p>
+
+    <div>
+      <span class="pill">Katılımcı kodu: {{ participant_code }}</span>
+      <span class="pill">Toplam tur: {{ num_rounds }}</span>
+      <span class="pill">1 jeton = {{ rate }} TL</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="title">Genel Açıklama</div>
+    <div class="text">
+      Toplam ödemeniz üç bileşenden oluşmaktadır:
+      deney oyunundan elde ettiğiniz kazanç,
+      bağış kararınızdan sonra sizde kalan miktar
+      ve sabit katılım ücreti.
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="kpi blue">
+      <div class="label">Toplam oyun kazancı</div>
+      <div class="val">{{ total_tokens_str }} jeton</div>
+      <div class="sub">Deney boyunca biriken toplam kazanç</div>
+    </div>
+
+    <div class="kpi green">
+      <div class="label">Oyundan gelen ödeme</div>
+      <div class="val">{{ total_tl_from_game_str }} TL</div>
+      <div class="sub">Toplam jeton × {{ rate }} TL</div>
+    </div>
+
+    <div class="kpi purple">
+      <div class="label">Bağıştan sonra sizde kalan</div>
+      <div class="val">{{ retained_amount_str }} TL</div>
+      <div class="sub">Bağış kararınızdan sonra sizde kalan miktar</div>
+    </div>
+
+    <div class="kpi amber">
+      <div class="label">Sabit katılım ücreti</div>
+      <div class="val">{{ participation_bonus_str }} TL</div>
+      <div class="sub">Deneye katılım karşılığı sabit ödeme</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>Ödeme Özeti</h3>
+    <table>
+      <tbody>
+        <tr>
+          <td>Toplam oyun kazancı (jeton)</td>
+          <td>{{ total_tokens_str }}</td>
+        </tr>
+        <tr>
+          <td>Oyundan gelen ödeme (TL)</td>
+          <td>{{ total_tl_from_game_str }}</td>
+        </tr>
+        <tr>
+          <td>Bağıştan sonra sizde kalan miktar (TL)</td>
+          <td>{{ retained_amount_str }}</td>
+        </tr>
+        <tr>
+          <td>Sabit katılım ücreti (TL)</td>
+          <td>{{ participation_bonus_str }}</td>
+        </tr>
+        <tr class="highlight">
+          <td>Nihai toplam ödeme (TL) <small>(tam liraya yukarı yuvarlanmıştır; yuvarlama öncesi: {{ exact_total_str }})</small></td>
+          <td><strong>{{ grand_total_tl_str }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      Nihai ödeme = oyundan gelen ödeme + bağıştan sonra sizde kalan miktar + katılım ücreti.
+    </p>
+  </div>
+
+  <div class="box">
+    <h3>Tüm Turların Özeti</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Gösterge</th>
+          {% for c in cols %}
+            <th>{{ c.round_num }}. Tur</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ağ tipi</td>
+          {% for c in cols %}
+            <td>
+              {% if c.network_type == 'control' %}
+                Control
+              {% elif c.network_type == 'cycle' %}
+                Cycle
+              {% else %}
+                Star
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Başlangıç bütçesi</td>
+          {% for c in cols %}
+            <td>{{ c.endowment }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Sizin katkınız</td>
+          {% for c in cols %}
+            <td>{{ c.your_contribution }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr class="highlight">
+          <td>Sizde kalan</td>
+          {% for c in cols %}
+            <td>{{ c.keep }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Diğerlerinin katkısı</td>
+          {% for c in cols %}
+            <td>{{ c.others_contribution }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Toplam katkı</td>
+          {% for c in cols %}
+            <td>{{ c.total_contribution }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Komşuluk büyüklüğü</td>
+          {% for c in cols %}
+            <td>{{ c.neighborhood_size }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr class="highlight">
+          <td>Havuzdan gelen dönüş</td>
+          {% for c in cols %}
+            <td>{{ c.public_return_str }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr class="highlight">
+          <td>Tur kazancı</td>
+          {% for c in cols %}
+            <td>{{ c.payoff_str }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Tur kazancı (TL)</td>
+          {% for c in cols %}
+            <td>{{ c.payoff_tl_str }}</td>
+          {% endfor %}
+        </tr>
+
+        <tr>
+          <td>Kümülatif kazanç (jeton)</td>
+          {% for c in cols %}
+            <td>{{ c.cum_payoff_str }}</td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="note">
+      Bu tablo, deney boyunca oynadığınız tüm turları ve her turdaki sonuçlarınızı birlikte göstermektedir.
+    </p>
+  </div>
+
+  <div class="footer">
+    <div class="footer-note">
+      Devam ettiğinizde ödeme bilgi ekranına geçeceksiniz.
+    </div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+{% endblock %}

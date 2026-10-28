@@ -1,3 +1,5 @@
+from os import environ
+
 # =========================================================
 # SESSION CONFIGURATIONS
 # Her session config, oTree admin panelinde ayrı bir oturum
@@ -48,6 +50,20 @@ SESSION_CONFIGS = [
         real_world_currency_per_point=1.0,
     #    block_order=['control', 'cycle', 'star'],
     ),
+
+    # -----------------------------------------------------
+    # DEMO: network_within ile birebir aynı, yalnızca
+    # toplam 3 tur (her treatment bloğu 1 tur)
+    # -----------------------------------------------------
+    dict(
+        name='demo_network_within',
+        display_name="DEMO - Network Within (3 tur)",
+        app_sequence=['demo_network_within'],
+        num_demo_participants=3,
+        participation_fee=100,
+        real_world_currency_per_point=1.0,
+    #    block_order=['control', 'cycle', 'star'],
+    ),
 ]
 
 
@@ -71,6 +87,8 @@ SESSION_CONFIG_DEFAULTS = dict(
 LANGUAGE_CODE = 'tr'
 REAL_WORLD_CURRENCY_CODE = 'TRY'
 USE_POINTS = True
+# Payoff'lar (0,5 / 0,25 gibi) yuvarlanmadan, 2 ondalıkla saklanır ve gösterilir.
+POINTS_DECIMAL_PLACES = 2
 
 
 # =========================================================
@@ -81,6 +99,7 @@ USE_POINTS = True
 INSTALLED_APPS = [
     'otree',
     'network_within',
+    'demo_network_within',
     'network_control',
     'network_cycle',
     'network_star',
@@ -93,6 +112,34 @@ INSTALLED_APPS = [
 # Özellikle gerçek bir sunucuya çıkarken güçlü bir admin şifresi kullan.
 # =========================================================
 
-SECRET_KEY = 'eoy'
+# Gerçek oturumda şifreler ortam değişkenlerinden okunur (baslat_sinif.ps1 bunları ayarlar).
+# Dosyada/GitHub'da şifre tutulmaz. Ortam değişkeni yoksa (devserver) varsayılanlar geçerli olur.
+SECRET_KEY = environ.get('OTREE_SECRET_KEY', 'yerel-gelistirme-anahtari')
 ADMIN_USERNAME = 'eoy'
-ADMIN_PASSWORD = 'eoy'
+ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
+
+
+# =========================================================
+# ROOMS
+# Her laboratuvar için kalıcı oda: terminal etiketleri _rooms/*.txt dosyalarından gelir.
+# Katılımcı terminalinin sabit bağlantısı sayesinde bağlantı koparsa kaldığı yerden devam eder.
+# Oturum, odadaki katılımcı sayısı 3'ün katına ulaşınca admin panelinden başlatılır.
+# =========================================================
+
+ROOMS = [
+    # Sınıf oturumu: etiket dosyası YOK; herkes aynı adresle girer (/room/sinif)
+    dict(
+        name='sinif',
+        display_name='Sınıf Oturumu',
+    ),
+    dict(
+        name='itu_lab',
+        display_name='İTÜ Laboratuvarı',
+        participant_label_file='_rooms/itu_lab.txt',
+    ),
+    dict(
+        name='yeditepe_lab',
+        display_name='Yeditepe Laboratuvarı',
+        participant_label_file='_rooms/yeditepe_lab.txt',
+    ),
+]

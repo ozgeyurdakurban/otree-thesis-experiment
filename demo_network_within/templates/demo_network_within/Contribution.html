@@ -1,0 +1,616 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Tur {{ round_num }} / {{ num_rounds }} - Katkı Kararı{% endblock %}
+
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --brand:#1d4ed8;
+    --brand2:#0ea5e9;
+    --ok:#16a34a;
+    --warn:#dc2626;
+    --card:#ffffff;
+    --bg:#f8fafc;
+    --line:#e2e8f0;
+    --amber:#ca8a04;
+    --amberbg:#fffbe6;
+    --amberline:#fde047;
+  }
+
+  /* Ana sayfa genişliği */
+  .pg-wrap{
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  /* Üst bilgi kutusu */
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+    margin-bottom: 14px;
+  }
+  .hero h2{
+    margin:0;
+    font-weight: 700;
+  }
+  .hero p{
+    margin:6px 0 0 0;
+    opacity:.92;
+    line-height: 1.5;
+  }
+
+  /* Küçük etiketler */
+  .pill{
+    display:inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.22);
+    font-weight: 700;
+    margin-right: 8px;
+    margin-top: 8px;
+    font-size: .92rem;
+  }
+
+  /* İki sütunlu yerleşim */
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items:start;
+  }
+  @media (max-width: 980px){
+    .grid{
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Kart görünümü */
+  .cardx{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .06);
+    margin-top: 12px;
+  }
+
+  .title-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .cardx h3{
+    font-size: 1.05rem;
+    margin: 0;
+    color: var(--ink);
+    font-weight: 700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .tag{
+    font-size: .78rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    background: var(--bg);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .muted{
+    color: var(--muted);
+  }
+
+  /* İstatistik kutuları */
+  .statgrid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+  }
+  @media (max-width: 520px){
+    .statgrid{
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stat{
+    border:1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 10px;
+    background: #fff;
+  }
+
+  .stat .k{
+    font-size:.9rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .stat .v{
+    font-size:1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .stat .s{
+    font-size:.86rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  /* Canlı katkı özeti */
+  .summary{
+    margin-top: 10px;
+    padding: 12px 12px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: #ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    text-align:center;
+  }
+
+  .summary .k{
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .summary .v{
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .v-red{
+    color: #dc2626;
+  }
+
+  .v-green{
+    color: #16a34a;
+  }
+
+  /* Hata / uyarı metni */
+  .warn{
+    margin-top: 6px;
+    color: var(--warn);
+    font-weight: 700;
+    font-size: .92rem;
+  }
+
+  /* Kazanç formülü kutusu */
+  .reminder{
+    background: var(--amberbg);
+    border: 1px solid var(--amberline);
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+    margin-top: 12px;
+  }
+
+  .reminder h4{
+    margin:0 0 6px 0;
+    color: var(--amber);
+    font-weight: 700;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .formula{
+    margin: 8px 0 0 0;
+    padding: 10px 12px;
+    background:#fff;
+    border: 1px dashed #e5e7eb;
+    border-radius: 14px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .smallnote{
+    margin-top: 8px;
+    font-size:.92rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  /* Alt bölüm */
+  .footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-note{
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  /* SVG alanı */
+  .svgbox{
+    text-align:center;
+    margin-top: 10px;
+  }
+
+  .svgframe{
+    max-width:100%;
+    border:1px dashed #e5e7eb;
+    border-radius:12px;
+    background:#fff;
+  }
+
+  /* oTree butonu */
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 700 !important;
+  }
+</style>
+
+<div class="pg-wrap">
+
+  <!-- Üst başlık ve round özeti -->
+  <div class="hero">
+
+    <p>
+      Bu tur için başlangıç bütçeniz <strong>{{ endowment }} jetondur</strong>.
+      0 ile {{ endowment }} arasında bir tam sayı seçerek ortak havuza katkınızı belirleyin.
+    </p>
+
+    <div>
+      <span class="pill">🪙 Bütçe: {{ endowment }}</span>
+
+      {% if network_type == 'control' %}
+        <span class="pill">🧩 Kontrol</span>
+        <span class="pill">👥 Grup: {{ group_size }} kişi</span>
+
+      {% elif network_type == 'cycle' %}
+        <span class="pill">🔁 Halka</span>
+        <span class="pill">👥 Komşuluk: {{ neighborhood_size }} kişi</span>
+
+      {% elif network_type == 'star' %}
+        <span class="pill">⭐ Yıldız</span>
+        <span class="pill">👤 Rol:
+          {% if network_role == 'center' %}
+            Merkez
+          {% elif network_role == 'periphery' %}
+            Çevre
+          {% else %}
+            Üye
+          {% endif %}
+        </span>
+        <span class="pill">👥 Komşuluk: {{ neighborhood_size }} kişi</span>
+      {% endif %}
+    </div>
+  </div>
+
+<div class="grid">
+
+  {% if network_type != 'control' %}
+  <!-- Sol kolon: ağ bilgisi ve network görseli -->
+  <div class="cardx">
+    <div class="title-row">
+      <h3>Ağ Konumunuz</h3>
+      <span class="tag">Kırmızı düğüm = Siz</span>
+    </div>
+
+    <div class="statgrid">
+      <div class="stat">
+        <div class="k">Başlangıç</div>
+        <div class="v">{{ endowment }} (jeton)</div>
+      </div>
+
+      <div class="stat">
+        <div class="k">Sizin ID'niz:#{{ you_idx }} </div>
+        <div class="v" style="color: var(--warn);">
+          Bu turda
+          {% if network_role == 'center' %}
+            Merkez
+          {% elif network_role == 'periphery' %}
+            Çevre
+          {% else %}
+            Üye
+          {% endif %}
+          oyuncusunuz.
+        </div>
+        <div class="s">
+          Komşu(lar):
+          {% if left_idx %}#{{ left_idx }}{% endif %}
+          {% if right_idx and right_idx != left_idx %}, #{{ right_idx }}{% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% if nodes and edges %}
+    <div class="svgbox">
+      <svg id="net-svg" width="360" height="280" viewBox="0 0 300 300" class="svgframe"></svg>
+      <div class="smallnote">
+        Çizimdeki bağlantılar bu turdaki etkileşim ağınızı gösterir.
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <div>
+    <div class="cardx">
+      <div style="margin-top: 10px;">
+        <label class="form-label" style="font-weight: 900; color: var(--ink);">
+          Ortak Havuza Katkınız (0 - {{ endowment }}):
+        </label>
+        {{ formfield 'contribution' label="" }}
+        <div id="contribution_warning" class="warn"></div>
+        
+      </div>
+
+      <div class="summary">
+        <div>
+          <div class="k">Ortak Havuza Katkınız</div>
+          <div class="v v-red"><span id="live_c">{{ contribution }}</span> jeton</div>
+        </div>
+        <div style="height: 24px; width:1px; background: var(--line);"></div>
+        <div>
+          <div class="k">Size Kalacak</div>
+          <div class="v v-green"><span id="live_keep"></span> jeton</div>
+        </div>
+      </div>
+
+      <div class="smallnote">
+        Nihai kazancınız, ilgili oyuncuların tüm katkıları belli olduktan sonra hesaplanacaktır.
+      </div>
+    </div>
+
+    <div class="reminder">
+      <h4>⏱ Hatırlatma: Kazanç Formülü</h4>
+      <div class="muted" style="font-weight:800;">Bu turdaki kazancınız şu şekilde hesaplanacaktır:</div>
+
+      {% if network_type == 'control' %}
+        <div class="formula">
+          Kazanç = ({{ endowment }} − Katkınız) + (({{ beta }} × Toplam Grup Katkısı) / {{ neighborhood_size }})
+        </div>
+        <div class="smallnote">
+          Grubun toplam katkısı, sizin ve gruptaki diğer katılımcıların katkılarının toplamıdır.
+        </div>
+      {% else %}
+        <div class="formula">
+          Kazanç = ({{ endowment }} − Katkınız) + (({{ beta }} × Kapalı Komşuluk Toplam Katkısı) / {{ neighborhood_size }})
+        </div>
+        <div class="smallnote">
+          Kapalı komşuluk toplam katkısı, sizin katkınız ile komşularınızın katkılarının toplamıdır.
+        </div>
+      {% endif %}
+      
+    </div>
+
+    <div class="footer">
+      <div class="footer-note">
+        Katkı kararınızı girdikten sonra "Devam Et" butonuna basınız.
+      </div>
+      {{ next_button }}
+    </div>
+  </div>
+
+</div>
+
+{# 
+  Python tarafında hazırlanmış JSON verilerini template içine gömüyoruz.
+  Böylece JavaScript bunları doğrudan okuyabiliyor.
+#}
+<script id="net-nodes-data" type="application/json">{{ nodes_json }}</script>
+<script id="net-edges-data" type="application/json">{{ edges_json }}</script>
+<script id="net-you-id-data" type="application/json">{{ you_id_json }}</script>
+
+<script>
+(function(){
+  // ------------------------------------------------------------
+  // 1) Python'dan gelen temel verileri al
+  // ------------------------------------------------------------
+  const endowment = {{ endowment }};
+  const nodes = JSON.parse(document.getElementById('net-nodes-data').textContent || '[]');
+  const edges = JSON.parse(document.getElementById('net-edges-data').textContent || '[]');
+  const youId = JSON.parse(document.getElementById('net-you-id-data').textContent || '0');
+
+  // ------------------------------------------------------------
+  // 2) Form alanları ve canlı özet elemanları
+  // ------------------------------------------------------------
+  const field    = document.querySelector('input[name="contribution"]');
+  const liveC    = document.getElementById('live_c');
+  const liveKeep = document.getElementById('live_keep');
+  const warning  = document.getElementById('contribution_warning');
+
+  // ------------------------------------------------------------
+  // 3) SVG alanı
+  // ------------------------------------------------------------
+  const svg = document.getElementById('net-svg');
+
+  // ------------------------------------------------------------
+  // 4) Yardımcı fonksiyon: sayıyı min-max aralığına sıkıştır
+  // ------------------------------------------------------------
+  function clamp(x, lo, hi){
+    return Math.max(lo, Math.min(hi, Number(x) || 0));
+  }
+
+  // ------------------------------------------------------------
+  // 5) Yardımcı fonksiyon: katkı düzeyine göre "Siz" node rengi üret
+  // ------------------------------------------------------------
+  // Mantık:
+  // - düşük katkıda açık kırmızı / pembe ton
+  // - yüksek katkıda daha koyu ve güçlü kırmızı ton
+  //
+  // ratio = contribution / endowment
+  // 0   -> açık ton
+  // 1   -> koyu / güçlü kırmızı
+  // ------------------------------------------------------------
+  function getYouNodeFill(contribution){
+    const ratio = endowment > 0 ? contribution / endowment : 0;
+
+    // Açık kırmızıdan koyu kırmızıya geçiş
+    // r sabit yüksek tutuluyor
+    // g ve b azaltılarak renk koyulaştırılıyor
+    const r = 220;
+    const g = Math.round(170 - (110 * ratio)); // 170 -> 60
+    const b = Math.round(170 - (120 * ratio)); // 170 -> 50
+
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  // ------------------------------------------------------------
+  // 6) Yardımcı fonksiyon: "Siz" node border rengi
+  // ------------------------------------------------------------
+  function getYouNodeStroke(contribution){
+    const ratio = endowment > 0 ? contribution / endowment : 0;
+
+    // Katkı arttıkça kenar da koyulaşsın
+    const r = 127;
+    const g = Math.round(70 - (40 * ratio));  // 70 -> 30
+    const b = Math.round(70 - (40 * ratio));  // 70 -> 30
+
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  // ------------------------------------------------------------
+  // 7) Node çizimi için reusable fonksiyon
+  // ------------------------------------------------------------
+  function el(name, attrs){
+    const e = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      e.setAttribute(k, v);
+    }
+    return e;
+  }
+
+  // ------------------------------------------------------------
+  // 8) Network'ü çiz / yeniden çiz
+  // ------------------------------------------------------------
+  function drawNetwork(currentContribution){
+    if (!svg || !nodes.length || !edges.length) return;
+
+    // SVG'yi temizle
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    // Önce bağlantıları çiz
+    edges.forEach(ed => {
+      const a = nodes.find(n => n.id === ed.source);
+      const b = nodes.find(n => n.id === ed.target);
+      if (!a || !b) return;
+
+      svg.appendChild(el('line', {
+        x1: a.x,
+        y1: a.y,
+        x2: b.x,
+        y2: b.y,
+        stroke: '#cbd5e1',
+        'stroke-width': 3
+      }));
+    });
+
+    // Sonra düğümleri çiz
+    nodes.forEach(n => {
+      const isYou = n.id === youId;
+      const g = el('g', {});
+
+      // "Siz" node'unun rengi contribution'a göre canlı değişsin
+      const circleFill = isYou ? getYouNodeFill(currentContribution) : '#9ca3af';
+      const circleStroke = isYou ? getYouNodeStroke(currentContribution) : '#6b7280';
+
+      // Düğüm dairesi
+      g.appendChild(el('circle', {
+        cx: n.x,
+        cy: n.y,
+
+        // Node boyutları büyütüldü
+        r: isYou ? 22 : 18,
+
+        fill: circleFill,
+        stroke: circleStroke,
+        'stroke-width': isYou ? 3 : 2
+      }));
+
+      // Düğüm içindeki yazı
+      const label = el('text', {
+        x: n.x,
+
+        // Dikey ortalama için hafif aşağı kaydırma
+        y: n.y + 6,
+
+        'text-anchor': 'middle',
+
+        // Yazı boyutları büyütüldü
+        'font-size': isYou ? 16 : 14,
+        'font-weight': isYou ? 900 : 800,
+
+        // "Siz" node'unda beyaz yazı, diğerlerinde koyu yazı
+        fill: isYou ? '#ffffff' : '#111827'
+      });
+
+      label.textContent = isYou ? 'Siz' : `#${n.id}`;
+
+      g.appendChild(label);
+      svg.appendChild(g);
+    });
+  }
+
+  // ------------------------------------------------------------
+  // 9) Katkı alanını canlı güncelle
+  // ------------------------------------------------------------
+  function updateContributionInternal(){
+    if (!field) return;
+
+    // Girilen değeri güvenli şekilde 0-endowment aralığına çek
+    let value = clamp(field.value, 0, endowment);
+    value = Math.round(value);
+
+    // Alanı integer olacak şekilde normalize et
+    if (String(field.value) !== '' && Number(field.value) !== value) {
+      field.value = value;
+    }
+
+    // Canlı özet metinleri
+    if (liveC)    liveC.textContent    = value;
+    if (liveKeep) liveKeep.textContent = String(endowment - value);
+    if (warning)  warning.textContent  = '';
+
+    // Katkı değiştiğinde network çizimini de güncelle
+    drawNetwork(value);
+  }
+
+  // Template içindeki oninput="updateContribution()" çağrısı için
+  window.updateContribution = updateContributionInternal;
+
+  // İlk yüklemede canlı değerleri hazırla
+  updateContributionInternal();
+
+  // Input alanına event bağla
+  if (field) {
+    field.addEventListener('input',  updateContributionInternal);
+    field.addEventListener('change', updateContributionInternal);
+  }
+
+  // İlk açılışta mevcut değerle çiz
+  const initialValue = clamp(field ? field.value : 0, 0, endowment);
+  drawNetwork(initialValue);
+})();
+</script>
+
+{% endblock %}

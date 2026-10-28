@@ -61,6 +61,16 @@ Then open `http://localhost:8000` and start a session
   `ADMIN_PASSWORD` in `settings.py`.
 - Data are anonymous; no identifying information is collected (see the consent page).
 
+## Ödeme, yuvarlama, odalar, blok sırası ve sınıf oturumu (29 Ekim 2026)
+
+- `POINTS_DECIMAL_PLACES = 2`: tur payoff'ları yuvarlanmaz (0,25'in katları); ekranlarda hesaplanan değer gösterilir (18,5; 13,25).
+- Yalnızca son sayfalarda (FinalResults, PaymentInfo) nihai toplam ödeme **tam liraya yukarı** yuvarlanır; `final_total_tl` bu yuvarlanmış tutardır.
+- `participant.payoff` katılım ücretini **içermez**; oTree admin Payments sayfası ücreti kendisi ekler (aksi halde 2 kez sayılırdı).
+- `ROOMS`: `itu_lab`, `yeditepe_lab` (terminal etiketleri `_rooms/*.txt`: ITU-01…18, YED-01…18; gerçek terminallere göre düzenle) ve `sinif` (etiketsiz; herkes `/room/sinif` adresiyle girer).
+- Blok sırası dengeli atanır: 6 permütasyon karıştırılıp gruplara sırayla verilir; 18 kişilik oturumda (6 grup) her sıra tam bir kez çıkar. Sabit sıra için `block_order` session config'i hâlâ geçerli.
+- Admin şifresi ve `SECRET_KEY` ortam değişkenlerinden okunur (`OTREE_ADMIN_PASSWORD`, `OTREE_SECRET_KEY`); `baslat_sinif.ps1` sunucuyu güvenli modda (`OTREE_AUTH_LEVEL=STUDY`, `prodserver`) başlatır. Sınıfta tünel için: `cloudflared tunnel --url http://localhost:8000`.
+- Testler: `deney_testleri/tests.py` (bot testi; `network_within/` içine kopyalayıp `otree test network_within 18 --export=../test_out`) ve `deney_testleri/check_payoffs.py` (export edilen veriyi ödeme formülünden bağımsız olarak kontrol eder).
+
 ## Lisans / License
 
 Özgün kod katkılarım **MIT**, özgün metinlerim ve yaratıcı içeriklerim **CC BY 4.0** kapsamındadır. Üçüncü taraf içerikler kendi koşullarını korur. [Kapsam ve tam metinler](LICENSE.md).

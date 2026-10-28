@@ -1,5 +1,7 @@
 from otree.api import *
+import itertools
 import json
+import math
 import random
 from math import cos, sin, pi
 
@@ -60,6 +62,32 @@ def get_participation_bonus(player: 'Player'):
     return player.session.config.get('participation_fee', 0)
 
 
+def fmt_num(x, decimals=2):
+    """Sayıyı hesaplandığı haliyle, en fazla 2 ondalıkla ve Türkçe ondalık virgülüyle gösterir
+    (örn. 20 / 18,5 / 13,25). Yuvarlama yapılmaz: payoff'lar 0,25'in katlarıdır."""
+    s = f"{float(x):.{decimals}f}".rstrip('0').rstrip('.')
+    return (s or '0').replace('.', ',')
+
+
+def ceil_tl(x) -> int:
+    """Nihai ödemeyi tam liraya YUKARI yuvarlar (kayan nokta hatasına karşı önce 6 haneye yuvarlanır)."""
+    return int(math.ceil(round(float(x), 6)))
+
+
+def compute_payment(player: 'Player') -> dict:
+    """Ödeme bileşenlerinin tek kaynağı (AltruismMeasure, FinalResults ve PaymentInfo burayı kullanır)."""
+    rate = get_rate(player)
+    fee = get_participation_bonus(player)
+    total_tokens = sum(float(rp.payoff) for rp in player.in_all_rounds())
+    game_tl = total_tokens * rate
+    retained = float(player.get_charity_retained_amount())
+    exact_total = game_tl + retained + fee
+    return dict(
+        rate=rate, fee=fee, total_tokens=total_tokens, game_tl=game_tl,
+        retained=retained, exact_total=exact_total, payable_total=ceil_tl(exact_total),
+    )
+
+
 def get_block_index(round_number: int) -> int:
     """Round'un hangi blokta olduğunu 0-based index olarak döndürür."""
     return (round_number - 1) // C.ROUNDS_PER_BLOCK
@@ -95,13 +123,21 @@ def creating_session(subsession: Subsession):
 
         fixed_order = subsession.session.config.get('block_order')
 
+        # Dengeli blok sırası: 3! = 6 permütasyon karıştırılıp gruplara sırayla verilir,
+        # havuz bitince yeniden doldurulur. Oturumda 6 grup (18 kişi) varsa her sıra tam 1 kez çıkar.
+        order_pool = []
+
         for group in subsession.get_groups():
             # ------------------------------------------------
             # Treatment sırası belirlenir
             # ------------------------------------------------
-            order = fixed_order[:] if fixed_order else C.BLOCKS[:]
-            if fixed_order is None:
-                random.shuffle(order)
+            if fixed_order:
+                order = fixed_order[:]
+            else:
+                if not order_pool:
+                    order_pool = [list(p) for p in itertools.permutations(C.BLOCKS)]
+                    random.shuffle(order_pool)
+                order = order_pool.pop()
             group.block_order = ','.join(order)
 
             # ------------------------------------------------
@@ -663,10 +699,10 @@ def build_round_row(round_player: Player, rate: float):
         mpcr=mpcr,
         keep=keep,
         public_return=public_return,
-        public_return_str=str(int(round(public_return))),
+        public_return_str=fmt_num(public_return),
         payoff=payoff,
-        payoff_str=str(int(round(payoff))),
-        payoff_tl_str=str(int(round(payoff * rate))),
+        payoff_str=fmt_num(payoff),
+        payoff_tl_str=fmt_num(payoff * rate),
     )
 
 
@@ -852,7 +888,7 @@ class Results(Page):
             row = build_round_row(round_player, rate)
             cumulative_payoff += row["payoff"]
             row["cum_payoff"] = cumulative_payoff
-            row["cum_payoff_str"] = str(int(round(cumulative_payoff)))
+            row["cum_payoff_str"] = fmt_num(cumulative_payoff)
             rows.append(row)
 
         sentence = "Henüz tamamlanmış tur bulunmamaktadır."
@@ -921,28 +957,21 @@ class AltruismMeasure(Page):
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        rate = player.session.config.get('real_world_currency_per_point', C.CONVERSION_RATE)
-        participation_bonus = player.session.config.get('participation_fee', 0)
+        pay = compute_payment(player)
 
-        # Oyundan kazanılan toplam
-        total_tokens = sum(float(rp.payoff) for rp in player.in_all_rounds())
-        total_tl_from_game = total_tokens * rate
+        # 1) Sadece oyun kazancı (TL, yuvarlanmamış)
+        player.game_total_tl = cu(pay['game_tl'])
 
-        # Bağış sonrası oyuncuda kalan miktar
-        retained_amount = float(player.get_charity_retained_amount())
+        # 2) Oyun + bağış sonrası oyuncuda kalan miktar (yuvarlanmamış)
+        player.post_charity_total_tl = cu(pay['game_tl'] + pay['retained'])
 
-        # 1) Sadece oyun kazancı
-        player.game_total_tl = cu(total_tl_from_game)
+        # 3) Nihai ödeme = oyun + kalan + katılım ücreti, tam liraya YUKARI yuvarlanmış
+        player.final_total_tl = cu(pay['payable_total'])
 
-        # 2) Oyun + bağış sonrası kalan miktar
-        player.post_charity_total_tl = cu(total_tl_from_game + retained_amount)
+        # oTree admin 'Payments' sayfası = participant.payoff x kur + katılım ücreti hesaplar.
+        # Bu yüzden participant.payoff'a katılım ücreti EKLENMEZ (aksi halde ücret 2 kez sayılırdı).
+        player.participant.payoff = cu((pay['payable_total'] - pay['fee']) / pay['rate'])
 
-        # 3) Nihai ödeme = oyun + bağış sonrası kalan + katılım ücreti
-        player.final_total_tl = cu(total_tl_from_game + retained_amount + participation_bonus)
-
-        # Admin / Payments ekranında da görülecek nihai ödeme
-        player.participant.payoff = player.final_total_tl
-        
         # Aynı özet alanlarını tüm round kayıtlarına kopyalayarak export'ta boşluk riskini azalt
         for rp in player.in_all_rounds():
             rp.game_total_tl = player.game_total_tl
@@ -959,7 +988,7 @@ class FinalResults(Page):
     @staticmethod
     def vars_for_template(player: Player):
         rate = get_rate(player)
-        participation_bonus = get_participation_bonus(player)
+        pay = compute_payment(player)
 
         rows = []
         cumulative_payoff = 0.0
@@ -968,13 +997,8 @@ class FinalResults(Page):
             row = build_round_row(round_player, rate)
             cumulative_payoff += row["payoff"]
             row["cum_payoff"] = cumulative_payoff
-            row["cum_payoff_str"] = str(int(round(cumulative_payoff)))
+            row["cum_payoff_str"] = fmt_num(cumulative_payoff)
             rows.append(row)
-
-        total_tokens = cumulative_payoff
-        total_tl_from_game = total_tokens * rate
-        retained_amount = float(player.get_charity_retained_amount())
-        grand_total_tl = total_tl_from_game + retained_amount + participation_bonus
 
         return dict(
             participant_code=player.participant.code,
@@ -982,20 +1006,21 @@ class FinalResults(Page):
             rate=rate,
             cols=rows,
 
-            total_tokens=total_tokens,
-            total_tokens_str=str(int(round(total_tokens))),
+            total_tokens=pay['total_tokens'],
+            total_tokens_str=fmt_num(pay['total_tokens']),
 
-            total_tl_from_game=total_tl_from_game,
-            total_tl_from_game_str=str(int(round(total_tl_from_game))),
+            total_tl_from_game=pay['game_tl'],
+            total_tl_from_game_str=fmt_num(pay['game_tl']),
 
-            retained_amount=retained_amount,
-            retained_amount_str=str(int(round(retained_amount))),
+            retained_amount=pay['retained'],
+            retained_amount_str=fmt_num(pay['retained']),
 
-            participation_bonus=participation_bonus,
-            participation_bonus_str=str(int(round(participation_bonus))),
+            participation_bonus=pay['fee'],
+            participation_bonus_str=fmt_num(pay['fee']),
 
-            grand_total_tl=grand_total_tl,
-            grand_total_tl_str=str(int(round(grand_total_tl))),
+            exact_total_str=fmt_num(pay['exact_total']),
+            grand_total_tl=pay['payable_total'],
+            grand_total_tl_str=str(pay['payable_total']),
         )
 
 
@@ -1006,24 +1031,19 @@ class PaymentInfo(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        rate = player.session.config.get('real_world_currency_per_point', C.CONVERSION_RATE)
-        participation_bonus = player.session.config.get('participation_fee', 0)
-
-        total_tokens = sum(float(rp.payoff) for rp in player.in_all_rounds())
-        total_tl_from_game = total_tokens * rate
-        retained_amount = float(player.get_charity_retained_amount())
-        grand_total_tl = total_tl_from_game + retained_amount + participation_bonus
+        pay = compute_payment(player)
 
         return dict(
             participant_code=player.participant.code,
-            total_tl_from_game=total_tl_from_game,
-            total_tl_from_game_str=str(int(round(total_tl_from_game))),
-            retained_amount=retained_amount,
-            retained_amount_str=str(int(round(retained_amount))),
-            participation_bonus=participation_bonus,
-            participation_bonus_str=str(int(round(participation_bonus))),
-            grand_total_tl=grand_total_tl,
-            grand_total_tl_str=str(int(round(grand_total_tl))),
+            total_tl_from_game=pay['game_tl'],
+            total_tl_from_game_str=fmt_num(pay['game_tl']),
+            retained_amount=pay['retained'],
+            retained_amount_str=fmt_num(pay['retained']),
+            participation_bonus=pay['fee'],
+            participation_bonus_str=fmt_num(pay['fee']),
+            exact_total_str=fmt_num(pay['exact_total']),
+            grand_total_tl=pay['payable_total'],
+            grand_total_tl_str=str(pay['payable_total']),
         )
 
 

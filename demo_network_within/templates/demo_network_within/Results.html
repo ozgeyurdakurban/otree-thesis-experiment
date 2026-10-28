@@ -1,0 +1,351 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Tur Sonuçları ({{ round_num }}/{{ num_rounds }}){% endblock %}
+
+{% block content %}
+
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#475569;
+    --line:#e2e8f0;
+
+    --brand:#003366;
+    --brand2:#0d6efd;
+
+    --redbg:#fff1f2;
+    --greenbg:#f0fdf4;
+    --bluebg:#eff6ff;
+    --amberbg:#fff7ed;
+
+    --card:#ffffff;
+    --bg:#f8fafc;
+  }
+
+  .pg{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 6px 6px;
+  }
+
+  .hero{
+    background: linear-gradient(135deg, var(--brand), var(--brand2));
+    color:#fff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, .10);
+  }
+  .hero h2{
+    margin:0;
+    font-weight:700;
+  }
+  .hero p{
+    margin:6px 0 0 0;
+    opacity:.94;
+    font-weight:500;
+    line-height:1.45;
+  }
+
+  .pill{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    border:1px solid rgba(233, 19, 19, 0.22);
+    background: rgba(255,255,255,.16);
+    color:#fff;
+    font-weight:500;
+    font-size:.84rem;
+    margin-right:6px;
+    margin-top:8px;
+  }
+
+  .info{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+    margin-bottom:12px;
+  }
+  .info .title{
+    font-weight:500;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .info .text{
+    color:var(--ink);
+    font-weight:500;
+    font-size:.96rem;
+    line-height:1.5;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:10px;
+    margin: 10px 0 12px 0;
+  }
+  @media (max-width:900px){
+    .cards{grid-template-columns:1fr;}
+  }
+
+  .kpi{
+    border-radius:14px;
+    padding:14px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-weight:700;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .05);
+  }
+  .kpi.red{background:var(--redbg);}
+  .kpi.green{background:var(--greenbg);}
+  .kpi.blue{background:var(--bluebg);}
+
+  .kpi .label{
+    color:var(--muted);
+    font-size:0.9em;
+    font-weight:700;
+  }
+  .kpi .val{
+    font-size:1.55em;
+    margin-top:6px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .kpi .sub{
+    font-size:0.9em;
+    color:var(--muted);
+    margin-top:4px;
+    font-weight:700;
+    line-height:1.35;
+  }
+
+  .netwrap{
+    display:grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap:10px;
+    align-items:start;
+    margin-top: 8px;
+  }
+  @media (max-width:900px){
+    .netwrap{grid-template-columns:1fr;}
+  }
+
+  .box{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    background:#fff;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, .04);
+  }
+  .box h3{
+    margin:0 0 8px 0;
+    font-weight:700;
+    color:var(--ink);
+    font-size:1.02rem;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+    background: var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  th, td{
+    padding:10px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:center;
+    font-size:0.95rem;
+    vertical-align:middle;
+  }
+  th:first-child, td:first-child{
+    text-align:left;
+    font-weight:500;
+    color: var(--muted);
+    width: 28%;
+  }
+  thead th{
+    background:#f1f5f9;
+    font-weight:700;
+  }
+  tr.highlight{
+    background:#f8fafc;
+    font-weight:700;
+  }
+
+  .note{
+    margin-top:10px;
+    font-size:0.9em;
+    color:#64748b;
+    font-weight:700;
+    line-height:1.45;
+  }
+
+  .footer{
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .footer-note{
+    color:var(--muted);
+    font-weight:700;
+  }
+
+  .svgframe{
+    max-width:100%;
+    margin-top:10px;
+    border:1px dashed #e5e7eb;
+    border-radius:12px;
+    background:#fff;
+  }
+
+  .otree-btn-next, button[type="submit"]{
+    border-radius: 12px !important;
+    padding: 10px 16px !important;
+    font-weight: 500 !important;
+  }
+</style>
+
+<div class="pg">
+
+  <div class="hero">
+    <div>
+      <span class="pill">
+        Bu turun yapısı:
+        {% if network_type == 'control' %}
+          Kontrol
+        {% elif network_type == 'cycle' %}
+          Halka Ağı
+        {% else %}
+          Yıldız Ağı
+        {% endif %}
+      </span>
+
+      <span class="pill">
+        Bu turdaki rolünüz:
+          {% if network_role == 'center' %}
+            Merkez
+          {% elif network_role == 'periphery' %}
+            Çevre
+          {% else %}
+            Üye
+          {% endif %}
+      </span>
+
+      
+      <span class="pill">Paylaşılan kişi sayısı: {{ neigh_size }}</span>
+    </div>
+  </div>
+
+  <div class="info">
+    <div class="title"><strong>Bu Turun Özeti</strong></div>
+    <div class="text">{{ this_round_sentence }}</div>
+  </div>
+
+  {% for c in cols %}
+    {% if forloop.counter == cols|length %}
+      <div class="cards">
+        <div class="kpi red">
+          <div class="label">Sizin katkınız</div>
+          <div class="val">{{ c.your_contribution }} jeton</div>
+          <div class="sub">Sizde kalan: {{ c.keep }} jeton</div>
+        </div>
+
+        <div class="kpi blue">
+          <div class="label">Havuzdan gelen pay</div>
+          <div class="val">≈ {{ c.public_return_str }} jeton</div>
+          <div class="sub">
+            {% if c.is_control %}
+              Bu turda grubun toplam katkısı {{ neigh_total_contribution }} oldu.
+              Bu toplam {{ c.beta }} ile çarpılarak grup içinde eşit biçimde paylaştırıldı.
+            {% else %}
+              Bu turda ilgili toplam katkı {{ neigh_total_contribution }} oldu.
+              Bu toplam {{ c.beta }} ile çarpılarak {{ c.neighborhood_size }} kişi arasında paylaştırıldı.
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="kpi green">
+          <div class="label">Bu tur kazancınız</div>
+          <div class="val">{{ c.payoff_str }} jeton</div>
+          <div class="sub">
+            Sizde kalan {{ c.keep }} jeton ve havuzdan gelen {{ c.public_return_str }} jetonun toplamı.
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+
+  <table>
+    <thead>
+      <tr>
+        <th>Gösterge</th>
+        {% for c in cols %}
+          <th>{{ c.round_num }}. Tur</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>Sizin katkınız</td>
+        {% for c in cols %}
+          <td>{{ c.your_contribution }}</td>
+        {% endfor %}
+      </tr>
+
+
+
+      <tr>
+        <td>Toplam katkı</td>
+        {% for c in cols %}
+          <td>{{ c.total_contribution }}</td>
+        {% endfor %}
+      </tr>
+
+
+      <tr class="highlight">
+        <td>Havuzdan gelen pay</td>
+        {% for c in cols %}
+          <td>{{ c.public_return_str }}</td>
+        {% endfor %}
+      </tr>
+
+      <tr class="highlight">
+        <td>Tur kazancı</td>
+        {% for c in cols %}
+          <td>{{ c.payoff_str }}</td>
+        {% endfor %}
+      </tr>
+
+      <tr>
+        <td>Kümülatif kazanç (jeton)</td>
+        {% for c in cols %}
+          <td>{{ c.cum_payoff_str }}</td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note">
+    Not: Nihai toplam ödeme, deney sonunda ayrıca özetlenecektir.
+  </p>
+
+  <div class="footer">
+    <div class="footer-note">
+      Sonraki tura geçmek için devam edin.
+    </div>
+    {{ next_button }}
+  </div>
+
+</div>
+
+
+{% endblock %}

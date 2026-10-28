@@ -10,7 +10,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 3
     NUM_ROUNDS = 2
     ENDOWMENT = 15
-    BETA = 1.2
+    BETA = 1.5
     CONVERSION_RATE = 1.0  # 1 token = 1 TL
 
 class Subsession(BaseSubsession):
