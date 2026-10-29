@@ -67,6 +67,32 @@ SESSION_CONFIGS = [
 ]
 
 
+# ---------------------------------------------------------
+# SINIF OTURUMLARI: 3 kişi bulunur bulunmaz tek gruplu oturum
+# Her yapılandırma blok sırasını SABİT verir. Sırayı 1'den 6'ya sırayla
+# döndürürsen (1,2,3,4,5,6,1,2,...) altı sıra oturumlar boyunca dengeli kalır.
+# Oturum oda üzerinden (Rooms > Sınıf Oturumu) 3 katılımcıyla açılır.
+# ---------------------------------------------------------
+_BLOCK_ORDERS = [
+    ['control', 'cycle', 'star'],
+    ['control', 'star', 'cycle'],
+    ['cycle', 'control', 'star'],
+    ['cycle', 'star', 'control'],
+    ['star', 'control', 'cycle'],
+    ['star', 'cycle', 'control'],
+]
+for _n, _order in enumerate(_BLOCK_ORDERS, start=1):
+    SESSION_CONFIGS.append(dict(
+        name=f'sinif_sira{_n}',
+        display_name=f'Sınıf (3 kişi) - Sıra {_n}: ' + ' > '.join(_order),
+        app_sequence=['network_within'],
+        num_demo_participants=3,
+        participation_fee=100,
+        real_world_currency_per_point=1.0,
+        block_order=_order,
+    ))
+
+
 # =========================================================
 # DEFAULT SESSION SETTINGS
 # Buradaki değerler, SESSION_CONFIGS içinde ayrıca

@@ -71,6 +71,12 @@ Then open `http://localhost:8000` and start a session
 - Admin şifresi ve `SECRET_KEY` ortam değişkenlerinden okunur (`OTREE_ADMIN_PASSWORD`, `OTREE_SECRET_KEY`); `baslat_sinif.ps1` sunucuyu güvenli modda (`OTREE_AUTH_LEVEL=STUDY`, `prodserver`) başlatır. Sınıfta tünel için: `cloudflared tunnel --url http://localhost:8000`.
 - Testler: `deney_testleri/tests.py` (bot testi; `network_within/` içine kopyalayıp `otree test network_within 18 --export=../test_out`) ve `deney_testleri/check_payoffs.py` (export edilen veriyi ödeme formülünden bağımsız olarak kontrol eder).
 
+## Sınıfta rastgele öğrenci bulundukça oynatma (3'lü oturumlar)
+
+- 3 öğrenci bulunur bulunmaz Rooms > **Sınıf Oturumu** üzerinden yeni oturum aç ve `Sınıf (3 kişi) - Sıra N` yapılandırmalarından birini seç (katılımcı sayısı 3). Sırayı 1→6 döndür; 40 grupta her sıra yaklaşık 7 kez çıkar.
+- Oturum doluyken odaya giren 4. öğrenci "Oturum dolu" görür; yeni oturum açılınca aynı adresle girer. Aynı odada art arda oturum açmak denendi: her yeni oturum kendi katılımcılarını alıyor, önceki oturum etkilenmiyor.
+- Sunucuyu yeniden başlatırken veritabanını **sıfırlama** (`baslat_sinif.ps1` sorusuna `H`), yoksa önceki oturumların verisi silinir. Her oturumdan sonra Data sekmesinden export al.
+
 ## Lisans / License
 
 Özgün kod katkılarım **MIT**, özgün metinlerim ve yaratıcı içeriklerim **CC BY 4.0** kapsamındadır. Üçüncü taraf içerikler kendi koşullarını korur. [Kapsam ve tam metinler](LICENSE.md).
