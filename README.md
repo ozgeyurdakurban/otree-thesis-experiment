@@ -75,7 +75,7 @@ Then open `http://localhost:8000` and start a session
 
 - 3 öğrenci bulunur bulunmaz Rooms > **Sınıf Oturumu** üzerinden yeni oturum aç ve `Sınıf (3 kişi) - Sıra N` yapılandırmalarından birini seç (katılımcı sayısı 3). Sırayı 1→6 döndür; 40 grupta her sıra yaklaşık 7 kez çıkar.
 - Oturum doluyken odaya giren 4. öğrenci "Oturum dolu" görür; yeni oturum açılınca aynı adresle girer. Aynı odada art arda oturum açmak denendi: her yeni oturum kendi katılımcılarını alıyor, önceki oturum etkilenmiyor.
-- Sunucuyu yeniden başlatırken veritabanını **sıfırlama** (`baslat_sinif.ps1` sorusuna `H`), yoksa önceki oturumların verisi silinir. Her oturumdan sonra Data sekmesinden export al.
+- Veri güvenliği: `baslat_sinif.ps1` veritabanını asla otomatik silmez; her başlangıçta ve çalışırken 5 dakikada bir `veri_yedekleri/` klasörüne yedek alır. Sıfırlama ancak iki kez `SIL` yazılırsa yapılır. Her oturumdan sonra yine Data sekmesinden export al. Gerçek veri ve yedekler `.gitignore` ile GitHub'a gönderilmez.
 
 ## Lisans / License
 

@@ -5,3 +5,6 @@ db.sqlite3
 .venv/
 venv/
 .DS_Store
+# Gercek veri ve yedekleri asla GitHub'a gitmesin
+veri_yedekleri/
+*.sqlite3
