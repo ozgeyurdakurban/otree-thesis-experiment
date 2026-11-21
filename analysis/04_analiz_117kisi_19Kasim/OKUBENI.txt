@@ -1,0 +1,18 @@
+ANALIZ - 117 katilimci, 39 grup, 7 oturum - 19 Kasim 2026
+Ornek kurali (18 Kasim karari): kimse cikarilmadi; ilerletmeler dummy ile isaretli (adv_dec, adv_grp, partner_adv). Set 3 (111 kisi) yalniz saglamlik.
+Ilerletilen 4 kisinin anket/bagis degerleri oTree varsayilani 0 oldugu icin NaN kodlandi (anket analizleri 113 kisi).
+Logit/PPML'de adv_dec sifiri tam ongordugu icin bu modeller gercek kararlarla (adv_dec=0) kuruldu; OLS'te dummy'ler modelde.
+Kaynak veri: ../../experiment_data/tüm_veri.xlsx (1. sayfa) ve ../../experiment_data/sessions/gerçek_*/otree_ciktilari/*PageTimes*.csv
+Calistirma sirasi (bu klasorun icinden):
+  python 00_hazirlik.py            -> 00_cikti.txt, D117.pkl
+  python 01_betimsel.py            -> 01_cikti.txt
+  python 02_planlanan_analizler.py -> 02_cikti.txt  (H1-H5, RQ3, sigma, complementarity, olcum eki, replikasyon, guc; ~10 sn)
+  python 03_ek_kontroller.py       -> 03_cikti.txt  (H5 marjinal etkiler, cinsiyet, dictator-oyun payi)
+Rapor: ch3_analiz_raporu_117kisi_19Kasim.md
+  python 04_ag_etkisi.py           -> 04_cikti.txt  (ag etkisi: 1. blok, sira, kosullu isbirligi, bilgi kanali, dagilim, sure, partner B)
+  python 05_prososyal_olcum.py     -> 05_cikti.txt, katilimci_prososyal_ozet.csv (olcu secimi: kismi etkiler, VIF, Shapley, faktor, ORIV)
+  python 06_sigma_lambda.py        -> 06_cikti.txt  ((D1,D2) -> (sigma, lambda), lambda ust siniri)
+  python 07_leontief_kontrol.py    -> 07_cikti.txt  (sigma=0, lambda=0 Star ongorusu)
+Gerekli paketler: pandas, numpy, scipy, statsmodels, openpyxl, linearmodels, factor_analyzer
+  python 08_ces_leontief_ongoruler.py -> 08_cikti.txt  (CES'te sigma'ya, Leontief'te lambda'ya gore pozisyon farklari)
+Nihai sonuclar: ch3_nihai_sonuclar_117kisi.md

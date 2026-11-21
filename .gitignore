@@ -5,6 +5,21 @@ db.sqlite3
 .venv/
 venv/
 .DS_Store
+
 # Gercek veri ve yedekleri asla GitHub'a gitmesin
 veri_yedekleri/
 *.sqlite3
+
+# Yerel sirlar ve PostgreSQL yedekleri
+veritabani_url.txt
+rest_anahtari.txt
+*.dump
+loglar/
+
+# Ch3 analysis: experimental data and intermediate frames are never published
+experiment_data/
+*.pkl
+*.xlsx
+analysis/**/D117_kararlar.csv
+analysis/**/katilimci_*.csv
+analysis/**/bireysel_ongoru.csv

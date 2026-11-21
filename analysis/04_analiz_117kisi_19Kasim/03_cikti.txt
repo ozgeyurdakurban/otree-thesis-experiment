@@ -1,0 +1,30 @@
+### H5 marjinal etkiler (birey FE; kompozit -1/0/+1 sd)
+ [117, composite] z=-1: leaf-centre -1.04 (p 0.019), centre-reg +1.04, leaf-reg +0.00 | z=+0: leaf-centre -0.31 (p 0.268), centre-reg +0.11, leaf-reg -0.20 | z=+1: leaf-centre +0.42 (p 0.251), centre-reg -0.82, leaf-reg -0.40
+ [117, composite_nodict] z=-1: leaf-centre -1.21 (p 0.004), centre-reg +0.99, leaf-reg -0.22 | z=+0: leaf-centre -0.31 (p 0.255), centre-reg +0.11, leaf-reg -0.20 | z=+1: leaf-centre +0.59 (p 0.089), centre-reg -0.77, leaf-reg -0.18
+ [Set 3, composite] z=-1: leaf-centre -1.12 (p 0.015), centre-reg +1.07, leaf-reg -0.05 | z=+0: leaf-centre -0.28 (p 0.315), centre-reg +0.08, leaf-reg -0.21 | z=+1: leaf-centre +0.56 (p 0.118), centre-reg -0.92, leaf-reg -0.36
+ [Set 3, composite_nodict] z=-1: leaf-centre -1.29 (p 0.003), centre-reg +1.01, leaf-reg -0.28 | z=+0: leaf-centre -0.29 (p 0.292), centre-reg +0.08, leaf-reg -0.21 | z=+1: leaf-centre +0.72 (p 0.035), centre-reg -0.85, leaf-reg -0.14
+  control: kompozit egimi +1.274 (se 0.276, p 0.000)
+  cycle: kompozit egimi +1.010 (se 0.404, p 0.012)
+  center: kompozit egimi +0.049 (se 0.438, p 0.910)
+  periphery: kompozit egimi +0.991 (se 0.415, p 0.017)
+
+### Cinsiyet (kesifsel)
+  kadin 6.54 (n=66), erkek 5.50 (n=46); MWU p=0.037
+  c ~ female+C(ses): kadin +1.15 (se 0.64, p 0.073)
+  c ~ female+composite+C(ses): kadin +0.82 (se 0.69, p 0.235); kompozit +0.87 (p 0.017)
+  kompozit: kadin +0.18, erkek -0.22 (MWU p=0.001); bagis kadin 85.7, erkek 80.2
+
+### Dictator payi ile oyundaki giving share (CD altinda ikisi de B_i)
+  ort dictator payi 0.827, ort oyun payi 0.145; dictator payi > oyun payi olan kisi 0.947; Wilcoxon p=5.8e-20
+  Spearman 0.141 (p 0.136); bagis<100 olanlarda Spearman 0.130 (p 0.395, n=45)
+
+### Oturum/sinif heterojenligi (gercek kararlar)
+               ort  ilk3  son3  sifir
+session_code                         
+21bzz0th      6.45  7.91  4.67   0.09
+ckrw9p0v      4.35  4.89  4.36   0.28
+i59wmcge      5.38  6.19  4.33   0.28
+tbo1h687      6.50  6.53  6.14   0.03
+uqagchnn      6.09  7.04  4.60   0.10
+w6tq9mcj      7.36  7.15  6.59   0.01
+wljzphi4      6.03  6.96  5.42   0.00

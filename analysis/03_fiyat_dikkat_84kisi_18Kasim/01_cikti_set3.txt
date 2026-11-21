@@ -1,0 +1,29 @@
+##### ORNEKLEM 78 N 78 grup 26
+
+### A. Star icinde leaf - centre (jeton), birey FE. CD ongorusu ~ +3 jeton, sigma~0 ongorusu ~0
+ortalama leaf-centre: -0.144 (se 0.396, p 0.716)
+Star 1. blokta: -0.574 (se 0.543, p 0.290)
+Star 2. blokta: +0.009 (se 0.772, p 0.990)
+Star 3. blokta: +0.167 (se 0.696, p 0.811)
+egilim (her ek blok deneyimi): +0.375 (se 0.439, p 0.394)
+
+### B. Star blogu icinde ogrenme: leaf - centre turlarla buyuyor mu?
+1. turda leaf-centre: -0.261 (se 0.669, p 0.697) | tur basina degisim: +0.047 (se 0.191, p 0.808)
+ilk 3 tur: -0.212 (se 0.515, p 0.681) | son 3 turda ek: +0.135 (se 0.594, p 0.821)
+
+### C. Dusunme: Control/Cycle'da yavas karar verenler leaf'te daha cok fiyata tepki veriyor mu?
+leaf x dusunme tipi (1 sd): +0.323 (se 0.357, p 0.366)
+leaf x o turun suresi (kisi ici, endojen): -0.989 (se 0.562, p 0.078)
+
+### D. sigma_hat (pay log-odds, fractional logit, birey FE) Star sirasina gore. CD: 1, Leontief: 0
+Star 1. blokta: sigma_hat -0.132  %95GA [-0.416; 0.151]
+Star 2. blokta: sigma_hat -0.004  %95GA [-0.337; 0.329]
+Star 3. blokta: sigma_hat 0.045  %95GA [-0.211; 0.301]
+dusunme tipi +1 sd -> sigma degisimi: +0.144 (se 0.082, p 0.079)
+
+### E. Fiyata tepki veren alt grup var mi? Kisi duzeyi: kendi leaf ort. - kendi centre ort.
+n 78 | ortalama -0.14 medyan -0.38 sd 2.98
+  leaf >= centre+2: 15 kisi | leaf <= centre-2: 19 kisi | isaret testi p=0.608
+  leaf >= centre+3: 9 kisi | leaf <= centre-3: 11 kisi | isaret testi p=0.824
+  dagilim: {Interval(-16.0, -4.0, closed='right'): 6, Interval(-4.0, -2.0, closed='right'): 13, Interval(-2.0, -0.5, closed='right'): 20, Interval(-0.5, 0.5, closed='right'): 10, Interval(0.5, 2.0, closed='right'): 14, Interval(2.0, 4.0, closed='right'): 9, Interval(4.0, 16.0, closed='right'): 6}
+  |leaf-centre|>=3 olanlarin orani: gozlenen 0.256, rol etiketleri rastgele olsaydi 0.183 (p=0.033)

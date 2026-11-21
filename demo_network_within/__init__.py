@@ -1,3 +1,4 @@
+import kanal_yama  # noqa: F401  (websocket yamasi, 16 Kasim 2026)
 from otree.api import *
 import itertools
 import json
@@ -870,6 +871,9 @@ class Contribution(Page):
 
 class WaitForAll(WaitPage):
     """Tüm oyuncular karar verene kadar bekler, ardından payoff hesaplanır."""
+    # Websocket bildirimi kaybolursa sayfa kendini yeniler (bkz. templates/demo_network_within/WaitForAll.html)
+    template_name = 'demo_network_within/WaitForAll.html'
+
     @staticmethod
     def after_all_players_arrive(group: Group):
         group.set_payoffs()
@@ -940,7 +944,8 @@ class Demographics(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        # DEMO: anket ve ödeme sayfaları gösterilmez (3. turdan sonra ThankYou)
+        return False
 
 
 class AltruismMeasure(Page):
@@ -954,7 +959,8 @@ class AltruismMeasure(Page):
 
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        # DEMO: anket ve ödeme sayfaları gösterilmez (3. turdan sonra ThankYou)
+        return False
 
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
@@ -984,7 +990,8 @@ class FinalResults(Page):
     """Son round sonunda genel ödeme özetini gösterir."""
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        # DEMO: anket ve ödeme sayfaları gösterilmez (3. turdan sonra ThankYou)
+        return False
 
     @staticmethod
     def vars_for_template(player: Player):
@@ -1028,7 +1035,8 @@ class FinalResults(Page):
 class PaymentInfo(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == C.NUM_ROUNDS
+        # DEMO: anket ve ödeme sayfaları gösterilmez (3. turdan sonra ThankYou)
+        return False
 
     @staticmethod
     def vars_for_template(player: Player):

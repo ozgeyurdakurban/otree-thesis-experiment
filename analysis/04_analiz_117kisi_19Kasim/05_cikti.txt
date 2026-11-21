@@ -1,0 +1,59 @@
+N = 113
+
+### 1. Ikili iliskiler (Pearson / Spearman) - hedefler: ort. katki, 1. tur katkisi (geri bildirimden once), B_hat (Control+Cycle share)
+       spearman                    p              
+hedef      Bhat      c     c1   Bhat      c     c1
+olcu                                              
+alt_c1    0.026 -0.017  0.005  0.786  0.861  0.955
+alt_c2    0.296  0.266  0.289  0.001  0.004  0.002
+anchor    0.231  0.191  0.212  0.014  0.042  0.024
+comp      0.294  0.252  0.230  0.002  0.007  0.014
+comp3     0.287  0.251  0.230  0.002  0.007  0.014
+dict      0.141  0.099  0.168  0.136  0.298  0.075
+likert    0.244  0.192  0.115  0.009  0.041  0.224
+svo       0.230  0.210  0.238  0.014  0.025  0.011
+
+### 2. Coklu regresyon: dort olcu birlikte (kismi etkiler), oturum FE, grup kumelenmis SE
+  VIF: {'z_likert': np.float64(2.37), 'z_anchor': np.float64(2.58), 'z_svo': np.float64(1.27), 'z_dict': np.float64(1.16)}
+  Olculer arasi Pearson:
+        likert  anchor   svo  dict
+likert    1.00    0.76  0.40  0.32
+anchor    0.76    1.00  0.45  0.36
+svo       0.40    0.45  1.00  0.19
+dict      0.32    0.36  0.19  1.00
+  c: likert +0.278 (se 0.381, p 0.466); anchor +0.160 (se 0.417, p 0.702); svo +0.398 (se 0.258, p 0.124); dict +0.149 (se 0.233, p 0.523) | ortak test p=0.0422, R2=0.144
+      kompozit tek basina: +0.987 (se 0.315, p 0.0017), R2 artisi 0.068 (4 ayri olcu: 0.072)
+  c1: likert -0.052 (se 0.443, p 0.906); anchor +0.536 (se 0.487, p 0.271); svo +0.766 (se 0.365, p 0.036); dict +0.282 (se 0.382, p 0.461) | ortak test p=0.0007, R2=0.158
+      kompozit tek basina: +1.525 (se 0.359, p 0.0000), R2 artisi 0.108 (4 ayri olcu: 0.124)
+  Bhat: likert +0.005 (se 0.011, p 0.667); anchor +0.006 (se 0.011, p 0.556); svo +0.009 (se 0.008, p 0.246); dict +0.008 (se 0.005, p 0.149) | ortak test p=0.0054, R2=0.143
+      kompozit tek basina: +0.027 (se 0.007, p 0.0001), R2 artisi 0.083 (4 ayri olcu: 0.084)
+
+### 3. Shapley (dominance) R2 ayristirmasi - ort. katki ve B_hat (oturum FE sabit tutularak)
+  c: toplam R2 artisi 0.072; {'likert': '0.019 (%27)', 'anchor': '0.018 (%25)', 'svo': '0.028 (%39)', 'dict': '0.006 (%9)'}
+  Bhat: toplam R2 artisi 0.084; {'likert': '0.018 (%22)', 'anchor': '0.023 (%28)', 'svo': '0.025 (%30)', 'dict': '0.018 (%21)'}
+
+### 4. Madde duzeyi: GPS anchor maddeleri ve Likert faktor yapisi
+  alt_c1: +1sd -> +0.137 (p 0.566)
+  alt_c2: +1sd -> +0.758 (p 0.003)
+  birlikte: alt_c1 -0.149 (p 0.530), alt_c2 +0.811 (p 0.004)
+  Likert 2 faktor (ML, varimax) yukleri:
+    pt_b1  pt_b2  pt_b3  pt_b4  pt_b5  pt_b6  pt_b7  pt_b8  pt_b9  pt_b10
+F1   0.70   0.42   0.63   0.25   0.49   0.05   0.48   0.71   0.74    0.42
+F2   0.14   0.55   0.48   0.66   0.43   0.65   0.36   0.28   0.12    0.40
+  Faktor skorlari -> ort katki: F1 +0.633 (p 0.013), F2 +0.208 (p 0.511)
+   pt_b1: rho=+0.17 (p 0.076)   pt_b2: rho=+0.17 (p 0.064)   pt_b3: rho=+0.11 (p 0.259)   pt_b4: rho=+0.07 (p 0.474)   pt_b5: rho=+0.15 (p 0.104)   pt_b6: rho=-0.02 (p 0.794)   pt_b7: rho=+0.12 (p 0.210)   pt_b8: rho=+0.13 (p 0.183)   pt_b9: rho=+0.16 (p 0.082)   pt_b10: rho=+0.28 (p 0.002)
+  4 kanalli tek faktor yukleri: {'likert': np.float64(-0.82), 'anchor': np.float64(-0.93), 'svo': np.float64(-0.49), 'dict': np.float64(-0.39)}
+  Faktor skoru (latent B) -> ort katki: +0.726 jeton/sd (p 0.0042)
+
+### 5. Bagisin dogrusal olmamasi (tavan: %60 tam bagis)
+  tam bagis yapan vs yapmayan: +0.760 (p 0.090)
+  bagis<100 olanlarda bagis ~ katki: rho=0.023 (p 0.883, n=45)
+
+### 6. Olcum hatasi: ORIV mantigi (Gillen, Snowberg ve Yariv 2019) - bir olcu digerleriyle araclanir
+  z_likert | arac ['z_anchor', 'z_svo']: OLS +0.597 -> IV +0.852 (se 0.320, p 0.008); 1. asama F=63.1
+  z_anchor | arac ['z_likert', 'z_svo']: OLS +0.586 -> IV +0.875 (se 0.279, p 0.002); 1. asama F=70.1
+  z_svo | arac ['z_likert', 'z_anchor']: OLS +0.595 -> IV +1.345 (se 0.610, p 0.028); 1. asama F=13.3
+  comp3 | arac ['z_dict']: OLS +0.872 -> IV +1.345 (se 0.852, p 0.114); 1. asama F=10.9
+
+### 7. Kompozitin belirleyicileri ve cinsiyet aracilik (kesifsel)
+  toplam etki +1.15 (p 0.073); kadin -> kompozit +0.38 (p 0.041); kompozit -> katki +0.87 (p 0.017); dolayli +0.33, dogrudan +0.82 (p 0.235)

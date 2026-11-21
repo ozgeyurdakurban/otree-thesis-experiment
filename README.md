@@ -24,13 +24,13 @@ measures.
 | Folder | Role |
 |--------|------|
 | `network_within/`  | **Main app** used for data collection: all three treatments within one session (`__init__.py` holds the full model, pages, and payoff logic). |
-| `network_control/` | Stand-alone Control treatment (`models.py`, `pages.py`) — for piloting a single arm. |
-| `network_cycle/`   | Stand-alone Cycle treatment. |
-| `network_star/`    | Stand-alone Star treatment. |
+| `demo_network_within/` | 3-round demo of the main app (one round per block, fixed order; no surveys or payment pages). |
+| `network_control/`, `network_cycle/`, `network_star/` | Stand-alone single-treatment apps for piloting. **Not loaded** since 10 Nov 2026 (removed from `INSTALLED_APPS`); folders kept on disk. |
 | `settings.py`      | Session configurations, currency (`TRY`, points), participation fee, admin settings. |
 
 Templates live under each app's `templates/` folder. The session run in the thesis
-uses the `network_within` configuration in `settings.py`.
+uses the `network_within` configuration in `settings.py`. Only two session configs remain:
+`network_within` and `demo_network_within`.
 
 ## Requirements
 
@@ -48,8 +48,7 @@ pip install -r requirements.txt
 otree devserver
 ```
 Then open `http://localhost:8000` and start a session
-(`Control Treatment`, `Cycle Treatment`, `Star Treatment`, or the within-subject
-`network_within` configuration).
+(`network_within` for the main experiment, or `DEMO - Network Within (3 tur)`).
 
 ## Notes
 
@@ -61,21 +60,37 @@ Then open `http://localhost:8000` and start a session
   `ADMIN_PASSWORD` in `settings.py`.
 - Data are anonymous; no identifying information is collected (see the consent page).
 
-## Ödeme, yuvarlama, odalar, blok sırası ve sınıf oturumu (29 Ekim 2026)
+## Ödeme, yuvarlama, odalar ve blok sırası (29 Ekim 2026 düzeltmeleri)
 
 - `POINTS_DECIMAL_PLACES = 2`: tur payoff'ları yuvarlanmaz (0,25'in katları); ekranlarda hesaplanan değer gösterilir (18,5; 13,25).
-- Yalnızca son sayfalarda (FinalResults, PaymentInfo) nihai toplam ödeme **tam liraya yukarı** yuvarlanır; `final_total_tl` bu yuvarlanmış tutardır.
+- Yalnızca son sayfalarda (FinalResults, PaymentInfo) nihai toplam ödeme **tam liraya yukarı** yuvarlanır. `final_total_tl` bu yuvarlanmış tutardır.
 - `participant.payoff` katılım ücretini **içermez**; oTree admin Payments sayfası ücreti kendisi ekler (aksi halde 2 kez sayılırdı).
-- `ROOMS`: `itu_lab`, `yeditepe_lab` (terminal etiketleri `_rooms/*.txt`: ITU-01…18, YED-01…18; gerçek terminallere göre düzenle) ve `sinif` (etiketsiz; herkes `/room/sinif` adresiyle girer).
-- Blok sırası dengeli atanır: 6 permütasyon karıştırılıp gruplara sırayla verilir; 18 kişilik oturumda (6 grup) her sıra tam bir kez çıkar. Sabit sıra için `block_order` session config'i hâlâ geçerli.
-- Admin şifresi ve `SECRET_KEY` ortam değişkenlerinden okunur (`OTREE_ADMIN_PASSWORD`, `OTREE_SECRET_KEY`); `baslat_sinif.ps1` sunucuyu güvenli modda (`OTREE_AUTH_LEVEL=STUDY`, `prodserver`) başlatır. Sınıfta tünel için: `cloudflared tunnel --url http://localhost:8000`.
-- Testler: `deney_testleri/tests.py` (bot testi; `network_within/` içine kopyalayıp `otree test network_within 18 --export=../test_out`) ve `deney_testleri/check_payoffs.py` (export edilen veriyi ödeme formülünden bağımsız olarak kontrol eder).
+- `ROOMS`: `itu_lab` ve `yeditepe_lab`; terminal etiketleri `_rooms/*.txt` içinde (ITU-01…18, YED-01…18; gerçek terminallere göre düzenle).
+- Blok sırası dengeli atanır: 6 permütasyon karıştırılıp gruplara sırayla verilir. 18 kişilik oturumda (6 grup) her sıra tam bir kez çıkar. Sabit sıra gerekirse `network_within` config'indeki yorum satırı yapılmış `block_order` satırı açılır.
+- Test: `deney_testleri/` altındaki `tests.py` (bot) ve `check_payoffs.py`. Eski dosyaların yedeği: `tez/otree/yedek_29Ekim_duzeltme_oncesi/`.
 
-## Sınıfta rastgele öğrenci bulundukça oynatma (3'lü oturumlar)
+## Sınıf deneyi: sunucu, dayanıklılık ve prova (10–11 Kasım 2026)
 
-- 3 öğrenci bulunur bulunmaz Rooms > **Sınıf Oturumu** üzerinden yeni oturum aç ve `Sınıf (3 kişi) - Sıra N` yapılandırmalarından birini seç (katılımcı sayısı 3). Sırayı 1→6 döndür; 40 grupta her sıra yaklaşık 7 kez çıkar.
-- Oturum doluyken odaya giren 4. öğrenci "Oturum dolu" görür; yeni oturum açılınca aynı adresle girer. Aynı odada art arda oturum açmak denendi: her yeni oturum kendi katılımcılarını alıyor, önceki oturum etkilenmiyor.
-- Veri güvenliği: `baslat_sinif.ps1` veritabanını asla otomatik silmez; her başlangıçta ve çalışırken 5 dakikada bir `veri_yedekleri/` klasörüne yedek alır. Sıfırlama ancak iki kez `SIL` yazılırsa yapılır. Her oturumdan sonra yine Data sekmesinden export al. Gerçek veri ve yedekler `.gitignore` ile GitHub'a gönderilmez.
+- Sınıf oturumu `baslat_sinif.ps1` ile başlatılır (`prodserver`, Cloudflare tüneli); adım adım yönerge `Sinif_Deneyi_Teknik_Rehber.docx` içindedir. Eski betik `baslat_sinif_eski.ps1` olarak durur.
+- Betik QuickEdit'i kapatır, uykuyu engeller, sunucu çıktısını `loglar/` altına yazar ve veritabanını her 5 dakikada SQLite yedekleme yöntemiyle `veri_yedekleri/` içine yedekler. Bu sürüm Windows'ta henüz denenmemiştir.
+- `network_within` ve `demo_network_within` içindeki `templates/<app>/WaitForAll.html`, bekleme sayfasını 10–15 sn'de bir yeniler (websocket bildirimi kaybolursa takılmayı önler).
+- `../deney_testleri/`: `tests.py` (bot testi; canlı veritabanı olan klasörde `otree test` çalıştırmayın, `db.sqlite3`'ü boşaltır), `yuk_testi.py` (sanal öğrenci yük testi; kullanım Rehber Bölüm 15), `check_payoffs.py`.
+- Değişiklik öncesi dosyaların yedeği: `../yedekler/yedek_11Kasim_duzeltme_oncesi/`.
+- **Oturum kurma (12 Kasım 2026):** Oturum panelden `Create` ile **değil**, `python oturum_olustur.py N` (N: 3'ün katı; demo için `--config demo_network_within --oda demo`) ile kurulur. Panelden kurulum, öğrenci istekleriyle çakışıp yarım oturum bırakabiliyor (provada 3 denemenin 2'si başarısız oldu). `baslat_sinif.ps1` her başlatmada rastgele bir REST anahtarını `rest_anahtari.txt` dosyasına yazar; `oturum_olustur.py` bunu kullanır. Bu dosyayı paylaşmayın.
+- İki yük provası (27/30 sanal öğrenci, tünel üzerinden) 18 turu tamamladı; ikincisinde hata sayısı 0.
+
+## PostgreSQL (13 Kasım 2026)
+
+- Proje klasöründe `veritabani_url.txt` varsa `baslat_sinif.ps1` sunucuyu PostgreSQL ile başlatır (`DATABASE_URL`); dosya yoksa eskisi gibi SQLite (`db.sqlite3`) kullanılır. Dosyanın biçimi `veritabani_url_ORNEK.txt` içindedir; dosya `.gitignore` kapsamındadır, GitHub'a gitmez.
+- Betik başlangıçta `pg_kontrol.py` ile bağlantıyı sınar; veritabanı boşsa tabloları kurar, doluysa `pg_dump` ile `veri_yedekleri/pg_baslangic_*.dump` yedeğini alır ve sunucu çalışırken 15 dakikada bir `pg_canli_*.dump` üretir.
+- Geri yükleme (sunucu kapalıyken): `pg_restore --clean --if-exists --no-owner --dbname=<adres> <yedek.dump>`.
+- 4–12 Kasım oturumlarının verisi `db.sqlite3` ve `veri_yedekleri/*.sqlite3` içinde kalır; PostgreSQL'e aktarılmamıştır.
+- Bu sürüm Windows'ta henüz denenmemiştir; gerçek oturumdan önce `../deney_testleri/yuk_testi.py` ile prova yapılmalıdır.
+## Data analysis (Chapter 3)
+
+Python analysis of the classroom sessions (117 participants, 39 groups) is in [`analysis/`](analysis/README.md):
+pre-planned hypothesis tests, network effects, prosocial measurement and structural estimation of the CES
+parameters `(σ, λ)`. Data are not included.
 
 ## Lisans / License
 

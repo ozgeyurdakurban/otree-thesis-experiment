@@ -1,0 +1,26 @@
+##### ORNEKLEM 84 N 84
+
+### 1. Tepki fonksiyonu: bu turun katkisi ~ onceki turda GORDUGU komsu ortalamasi (birey FE)
+  tum                          n=1260  gordugu: +0.253 (se 0.065, p 0.000)
+  normal (Control+Cycle)       n= 840  gordugu: +0.299 (se 0.079, p 0.000)
+  Star: simdi leaf             n= 280  gordugu: +0.121 (se 0.065, p 0.061)
+  Star: simdi centre           n= 140  gordugu: +0.063 (se 0.117, p 0.592)
+
+### 2. Plasebo: onceki turda leaf iken GORMEDIGI diger leaf'e tepki (Star)
+  gordugu centre: +0.046 (se 0.062, p 0.460) | gormedigi leaf: -0.067 (se 0.070, p 0.337)  n 280
+
+### 3. Rol farki bilgi/karsiliklilik dinamigiyle aciklaniyor mu? (Star, kisi duzeyi leaf-centre dagilimi)
+  ham katki (2.-6. turlar): |gap|>=3 orani 0.225 vs rastgele 0.195, p=0.232
+  gordugu komsu + tur etkisi cikarildiktan sonra: gap varyansi 10.72 vs rastgele 6.73, p=0.015
+  yalnizca tur etkisi cikarildiktan sonra:        gap varyansi 10.74 vs rastgele 6.81, p=0.015
+
+### 4. Rol gecisleri: onceki tur rolune gore degisim, gordugu sinyal kontrollu
+  ham ortalama degisim: {'c>p': {'mean': -0.44, 'size': 140}, 'p>c': {'mean': 0.11, 'size': 140}, 'p>p': {'mean': -0.33, 'size': 140}}
+  regresyon (ref c>p): {'C(tr)[T.p>c]': '+0.38 p0.46', 'C(tr)[T.p>p]': '-0.03 p0.94', 'contribution_l': '-0.47 p0.00'}
+
+### 5. Sosyal etki kanali: kisinin bir jetonu digerlerine centre'da 1,5, normalde 1,0, leaf'te 0,5 getiriyor
+    Baskalarini onemseyen (yuksek B) kisi centre'da fazla, leaf'te az vermeli; fiyat ise ters yonu ongoruyor.
+  gap : Bhat rho=-0.01 (p 0.93, n 80) | likert rho=+0.11 (p 0.31, n 80) | bagis rho=-0.06 (p 0.58, n 80) | svo rho=+0.12 (p 0.28, n 80)
+  c_n : Bhat rho=-0.12 (p 0.30, n 80) | likert rho=-0.20 (p 0.08, n 80) | bagis rho=-0.13 (p 0.25, n 80) | svo rho=-0.17 (p 0.14, n 80)
+  l_n : Bhat rho=-0.12 (p 0.29, n 80) | likert rho=+0.05 (p 0.66, n 80) | bagis rho=-0.18 (p 0.12, n 80) | svo rho=+0.04 (p 0.74, n 80)
+  (gap=leaf-centre, c_n=centre-normal, l_n=leaf-normal; kisi duzeyi)

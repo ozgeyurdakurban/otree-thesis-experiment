@@ -1,0 +1,16 @@
+{% extends "otree/WaitPage.html" %}
+
+{% block internal_scripts %}
+    {{ super() }}
+<script>
+    // YEDEK MEKANİZMA (10 Kasım 2026)
+    // oTree bekleme sayfası, grubun tamamlandığını yalnızca websocket ile bildirir.
+    // Tünel/mobil ağda bağlantı sessizce koparsa katılımcı F5'e basana kadar burada kalır.
+    // Bu betik sayfayı 10-15 saniyede bir kendiliğinden yeniler: grup tamamlanmışsa
+    // sunucu katılımcıyı doğrudan sonuç sayfasına yönlendirir, değilse bekleme sürer.
+    // Rastgele aralık, 27 kişinin yenilemelerinin aynı ana yığılmasını önler.
+    setTimeout(function () {
+        window.location.reload();
+    }, 10000 + Math.random() * 5000);
+</script>
+{% endblock %}

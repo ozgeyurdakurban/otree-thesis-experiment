@@ -1,0 +1,27 @@
+PASS C1 odds(pi) = eta p^(1-sigma)
+PASS C1 numerical FOC  pi=0.14831568 formula=0.14831568
+PASS C2 eta=(B/(1-B))^sigma reproduces Ch2 share
+PASS C3 sigma=1: pi = eta/(1+eta)
+PASS C3 sigma->0: pi -> eta p/(1+eta p) (Leontief min{X, Y/eta})
+PASS C3 Leontief kink: argmax min{X, Y/eta} = W/(theta + Lt/eta)  5.948498
+PASS C3 CES optimum -> Leontief optimum as sigma -> 0 (monotone convergence)  gaps 0.7436, 0.3628, 0.1792, 0.0711
+PASS C4 dlog-odds/dlog eta = 1
+PASS C4 dlog-odds/dsigma|eta = -log p
+PASS C4 dlog-odds/dlam = (sigma-1)(Lambda-1)/Lt
+PASS C5 dc_i/deta_j = M_ij c_j (1-pi_j)/eta_j  146 interior draws, max rel. error 2.59e-05
+PASS C6 K_n interior iff eta < (theta/beta) p^(sigma-1)  4000 draws
+PASS C7 Leontief, lam=0, common eta: c* = eta e/(1-eta(beta-1)) on any network  500 networks, max |dev| 1.3e-13
+PASS C7 corner: eta > 1/beta gives c* = e
+PASS C8 sigma=0, lam>0: leaf > regular > centre
+PASS C9 D1 = (sigma-1) log(Lt_C/Lt_K)
+PASS C9 D2 = (sigma-1) log(p_K/p_L) = (sigma-1) log((2+lam)/(1+lam))
+PASS C9 sigma=0, lam=0: D1 = 0, D2 = -log 2
+PASS C10 interior contributions proportional to e
+PASS C11 closed-form best response = direct maximization  max |dev| 1.3e-06 tokens
+PASS C12 star closed form = iteration  974 interior draws
+PASS C13 leaf >= regular for every sigma in [0,4], lam in [0,4]; equality at (0,0)  42741 interior points
+PASS C14 centre >= regular if sigma >= 1 or lam = 0; centre < regular at sigma = 0, lam > 0
+PASS C15 leaf > centre for lam <= 2 and every sigma in [0,4], except equality at sigma = 0, lam = 0
+PASS C16 centre > leaf iff eta_C/eta_P > 2^sigma ((1+1.5lam)/(1+0.5lam))^(1-sigma)  15800 interior draws
+
+0 checks failed

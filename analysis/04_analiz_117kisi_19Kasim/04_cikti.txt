@@ -1,0 +1,38 @@
+### A. Duzey: Star blogu (centre+leaf) vs Control/Cycle
+  Star - Control: -0.067, perm p=0.8044, pozitif 19/39
+  Star - (Control+Cycle)/2: -0.073, perm p=0.7615, pozitif 19/39
+
+### B. Gruplar arasi temiz karsilastirma: yalniz 1. blok (sira etkisi yok)
+   {'control': {'mean': 6.28, 'std': 2.37, 'count': 14}, 'cycle': {'mean': 6.82, 'std': 2.98, 'count': 11}, 'star': {'mean': 6.31, 'std': 1.43, 'count': 14}}
+   Kruskal p=0.659 | Star vs Control MWU p=0.520
+   1. blok OLS (oturum FE): {'cycle': (0.69, np.float64(0.474)), 'star': (-0.05, np.float64(0.937))}
+
+### C. Sira / yayilma: Star deneyimi sonraki Control/Cycle davranisini degistiriyor mu?
+  Star sonrasi Control/Cycle: -1.043 (se 0.697, p 0.135) [birey FE, blok sirasi kontrollu]
+  Tretman x blok sirasi etkilesimleri ortak test p = 0.962
+   control: blok 1/2/3 ortalamasi [6.51, 5.78, 5.89]
+   cycle: blok 1/2/3 ortalamasi [7.26, 6.19, 5.14]
+   star: blok 1/2/3 ortalamasi [6.31, 6.14, 5.61]
+
+### D. Kosullu isbirligi: onceki turda GORULEN komsu ortalamasina tepki, tretmana gore (birey FE)
+  Control/Cycle egimi 0.187 (se 0.056); Star'da fark -0.006 (se 0.049, p 0.906)
+  (grup ortalamasi sinyaliyle) Control/Cycle 0.193; Star'da fark -0.003 (p 0.958)
+
+### E. Bilgi kanali: leaf iken GORULEN (centre) ve GORULMEYEN (diger leaf) kisinin onceki katkisina tepki
+  gorulen centre(t-1) +0.095 (p 0.141); gorulmeyen leaf(t-1) -0.048 (p 0.404); fark p=0.094; n=377
+
+### F. Grup ici dagilim ve uyum (her grup-tur icin katkilarin sd ve max-min)
+   ort grup ici sd: {'control': 3.05, 'cycle': 2.96, 'star': 2.99}
+  grup ici sd: Star - Control: -0.067, perm p=0.6989, pozitif 22/39
+
+### G. Blok ici azalma egimi tretmana gore
+  control -0.330/tur; cycle fark +0.137 (p 0.262); star fark +0.182 (p 0.033)
+
+### H. Karar suresi (log, birey FE), Control'e gore
+   {'cyc': '+15.7% (p 0.000)', 'leaf': '+22.1% (p 0.000)', 'centre': '+31.2% (p 0.000)'} | medyan sn: {'center': 9.0, 'control': 6.0, 'cycle': 7.0, 'periphery': 8.0}
+
+### I. Partnerlerin prosocial weight'inin (kompozit) etkisi: dC_i/dB_j > 0 (Prop. cd_net_general)
+  Control/Cycle (kisi duzeyi): kendi B +1sd +1.138 (p 0.001); partnerlerin ort B +1sd -0.051 (p 0.925); n=111
+  1. tur (geri bildirimden once): partner B -0.236 (p 0.583) -> beklenti kanali yoksa 0 olmali
+  Star leaf (birey FE): bagli partnerin (centre) B'si - bagsiz partnerin (diger leaf) B'si +1 -> +0.080 (se 0.149, p 0.591); model: >0
+  Star leaf (havuzlanmis): centre B -0.121 (p 0.781); diger leaf B -0.283 (p 0.471)

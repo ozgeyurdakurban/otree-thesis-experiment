@@ -1,0 +1,124 @@
+########## 1. H2: Control = Cycle (C3 = K3, yalniz cerceveleme farki)
+ [117 (tum)] 39 grup
+  Cycle - Control (jeton): fark +0.013 (grup sd 1.67), permutasyon p=0.9669, pozitif grup 19/39
+  TOST Cycle-Control (+-1): p=0.0003, %90 GA [-0.44; 0.46]
+  TOST Cycle-Control (+-0.5): p=0.0379, %90 GA [-0.44; 0.46]
+  Cycle - Control (giving share): fark -0.001 (grup sd 0.03), permutasyon p=0.8845, pozitif grup 18/39
+ [Set 3 (111)] 37 grup
+  Cycle - Control (jeton): fark +0.014 (grup sd 1.71), permutasyon p=0.9666, pozitif grup 18/37
+  TOST Cycle-Control (+-1): p=0.0006, %90 GA [-0.46; 0.49]
+  TOST Cycle-Control (+-0.5): p=0.0462, %90 GA [-0.46; 0.49]
+  Cycle - Control (giving share): fark -0.001 (grup sd 0.03), permutasyon p=0.8757, pozitif grup 17/37
+ Birey FE OLS (dummy'li, 117): cycle +0.059 (se 0.245, p 0.809)
+
+########## 2. Referans spesifikasyonun (Cobb-Douglas, sigma=1) testi: giving share pozisyonlar arasi esit mi?
+ [117 (tum)]
+  share: leaf - regular: fark -0.067 (grup sd 0.03), permutasyon p=0.0000, pozitif grup 0/39
+  share: centre - regular: fark +0.004 (grup sd 0.05), permutasyon p=0.5847, pozitif grup 23/39
+  share: leaf - centre: fark -0.071 (grup sd 0.05), permutasyon p=0.0000, pozitif grup 1/39
+ [Set 3 (111)]
+  share: leaf - regular: fark -0.069 (grup sd 0.02), permutasyon p=0.0000, pozitif grup 0/37
+  share: centre - regular: fark +0.003 (grup sd 0.05), permutasyon p=0.6702, pozitif grup 21/37
+  share: leaf - centre: fark -0.073 (grup sd 0.05), permutasyon p=0.0000, pozitif grup 1/37
+ Fractional logit (giving share), birey FE, grup kumelenmis SE; sigma_hat = 1 - D2/ln(0.5)  [lambda=0 altinda]
+  Gercek kararlarinin hepsi 0 olan kisi (FE logitte bilgi tasimaz): 2 [katılımcı kodları gizlendi] | hic gercek karari olmayan kisi: 3
+  kontrolsuz: D2(leaf)=-0.745 (se 0.050); D1(centre)=0.033 (se 0.061, p 0.590); cycle=-0.004 (p 0.929) -> sigma_hat=-0.075 (se 0.072) %95 GA [-0.216; 0.065]; H0 sigma=1: z=-15.02
+  blok+tur+partner_adv: D2(leaf)=-0.751 (se 0.046); D1(centre)=0.029 (se 0.060, p 0.632); cycle=0.002 (p 0.961) -> sigma_hat=-0.083 (se 0.066) %95 GA [-0.212; 0.047]; H0 sigma=1: z=-16.39
+  Set 3: sigma_hat=-0.083 (se 0.067); D1=0.018 (p 0.768)
+  Agregat log-odds: sigma=-0.047, D1=0.053; grup bootstrap %95 GA sigma [-0.164  0.062], D1 [-0.073  0.173]
+  Bireysel sigma_i (n=109): medyan -0.106, IQR [-0.41; 0.29], sigma_i<1 orani 0.963, sigma_i>=0.5 orani 0.147
+  PPML katkinin fiyat esnekligi d ln c/d ln theta = 0.047 (se 0.052); CD ongorusu: pay sabit -> leaf katkisi yaklasik 2 kat (esneklik ~ -1)
+
+########## 3. H3 / H4: leaf > centre > regular (jeton)
+ [117 (tum)]
+  leaf - centre: fark -0.297 (grup sd 1.69), permutasyon p=0.2855, pozitif grup 14/39
+  leaf - regular: fark -0.172 (grup sd 1.46), permutasyon p=0.4676, pozitif grup 16/39
+  centre - regular: fark +0.125 (grup sd 2.03), permutasyon p=0.7113, pozitif grup 21/39
+  TOST leaf-centre (+-1): p=0.0067, %90 GA [-0.75; 0.16]
+ [Set 3 (111)]
+  leaf - centre: fark -0.273 (grup sd 1.72), permutasyon p=0.3482, pozitif grup 13/37
+  leaf - regular: fark -0.170 (grup sd 1.50), permutasyon p=0.4971, pozitif grup 15/37
+  centre - regular: fark +0.103 (grup sd 2.08), permutasyon p=0.7690, pozitif grup 19/37
+  TOST leaf-centre (+-1): p=0.0072, %90 GA [-0.75; 0.21]
+ Birey FE OLS (117, dummy'li): leaf -0.167 (se 0.256), centre +0.130 (se 0.314); leaf-centre -0.297 (p 0.287); adv_dec -0.65
+  CD (sigma=1) center: gozlenen 6.27, ongorulen 7.93, RMSE 4.22
+  CD (sigma=1) periphery: gozlenen 6.00, ongorulen 11.07, RMSE 6.12
+  CES (sigma_hat) center: gozlenen 6.27, ongorulen 6.13, RMSE 3.66
+  CES (sigma_hat) periphery: gozlenen 6.00, ongorulen 5.93, RMSE 3.13
+
+########## 4. H1: prosocial weight katkiyi artirir mi?
+ 4a. Aciga cikmis B (yalniz Control payi) -> diger agdaki davranis (Spearman)
+   B_hat(Control) ~ c_cyc: rho=0.663 p=0.0000
+   B_hat(Control) ~ c_cen: rho=0.558 p=0.0000
+   B_hat(Control) ~ c_leaf: rho=0.661 p=0.0000
+ 4b. Anket/bagis olculeri -> katki (Spearman, Holm duzeltmeli; n=113)
+     olcu   hedef   rho     p  p_holm
+composite       c 0.252 0.007   0.099
+composite c_first 0.230 0.014   0.153
+composite    Bhat 0.294 0.002   0.024
+   likert       c 0.192 0.041   0.248
+   likert c_first 0.115 0.224   0.447
+   likert    Bhat 0.244 0.009   0.118
+   anchor       c 0.191 0.042   0.248
+   anchor c_first 0.212 0.024   0.191
+   anchor    Bhat 0.231 0.014   0.153
+      svo       c 0.210 0.025   0.191
+      svo c_first 0.238 0.011   0.134
+      svo    Bhat 0.230 0.014   0.153
+     dict       c 0.099 0.298   0.447
+     dict c_first 0.168 0.075   0.298
+     dict    Bhat 0.141 0.136   0.408
+  Panel OLS (oturum FE, grup kumeli): kompozit +1 sd -> +0.973 jeton (se 0.318, p 0.002); N kisi 113
+  Ayri ayri: bagis +1 sd +0.202 (p 0.371); Likert +1 sd +0.535 (p 0.023)
+
+########## 5. H5: pozisyon x tercih etkilesimi (merkez yalnizca yuksek B esiginin uzerinde leaf'i gecer)
+  zB: leaf x B -0.401 (p 0.291); centre x B -0.787 (p 0.063); fark +0.387 (p 0.095)  [H5: centre x B > leaf x B]
+  composite: leaf x B -0.200 (p 0.496); centre x B -0.932 (p 0.002); fark +0.732 (p 0.013)  [H5: centre x B > leaf x B]
+  Kisi duzeyi leaf-centre ~ B_hat(Control): rho=-0.012 p=0.899; ~ kompozit: rho=0.148 p=0.118
+  Odds esigi (Ch2 eq. ces_threshold): odds orani >2 olan kisi 66/109; bu kisilerde centre>leaf orani 0.85, digerlerinde 0.07 (mekanik iliski; yalniz tutarlilik kontrolu)
+
+########## 6. RQ3: social efficiency (SE) ag turune gore
+  Normalize etkinlik ortalamasi: {'control': 0.393, 'cycle': 0.394, 'star': 0.395}
+  Star - Control etkinlik: fark +0.002 (grup sd 0.12), permutasyon p=0.9099, pozitif grup 21/39
+  Cycle - Control etkinlik: fark +0.001 (grup sd 0.11), permutasyon p=0.9669, pozitif grup 19/39
+  Friedman p = 0.836
+  Star: centre'in grup katkisindaki payi 0.339 (esit dagilimda 1/3). Ayni toplam katki esit dagilsaydi etkinlik 0.389; tum katki centre'da olsaydi 0.622
+
+########## 7. Strategic complementarity ve dinamik
+  FE (alt sinir): gorulen komsu ort. (t-1) 0.181 (se 0.048, p 0.0002)
+  Pooled OLS (ust sinir): gorulen komsu ort. (t-1) 0.187 (se 0.045, p 0.0000)
+   pozisyon reg: egim 0.269 (se 0.070, p 0.000)
+   pozisyon center: egim 0.183 (se 0.177, p 0.303)
+   pozisyon periphery: egim 0.158 (se 0.060, p 0.008)
+  Asimetrik tepki: digerleri fazla verdiyse artirma 0.179 (se 0.039); az verdiyse kisma 0.491 (se 0.056); esitlik p=0.0000
+  Restart: 2. blok basi - 1. blok sonu: fark +0.966 (grup sd 2.48), permutasyon p=0.0108, pozitif grup 26/39
+  Restart: 3. blok basi - 2. blok sonu: fark +0.735 (grup sd 2.78), permutasyon p=0.1124, pozitif grup 22/39
+  Varyans ayristirmasi: gruplar arasi 13.4%, grup ici kisiler arasi 31.4%, artik 55.1%
+
+########## 8. Olcum eki: guvenilirlik ve yakinsak gecerlilik (anketi gecerli 113 kisi)
+  Likert Cronbach alfa 0.861; ozdegerler [4.63 1.19 0.87 0.74] (ilk bilesen payi 0.463; Kaiser >1 olan 2)
+  4 kanalli kompozit alfa 0.738
+     a      b   rho     p  p_holm
+likert anchor 0.696 0.000   0.000
+likert    svo 0.412 0.000   0.000
+likert   dict 0.208 0.027   0.066
+anchor    svo 0.473 0.000   0.000
+anchor   dict 0.215 0.022   0.066
+   svo   dict 0.170 0.072   0.072
+  Kompozit saglamligi (~ ort. katki): esit agirlik rho=0.252 (p 0.007); PC1 rho=0.251 (p 0.007); -likert rho=0.239; -anchor rho=0.245; -svo rho=0.206; -dict rho=0.251
+  Tavan: bagis=100 orani 0.602; Likert ort 5.23/7; anchor ort 6.58/10; SVO 3/3 prosocial-veya-ustu orani 0.602
+  SVO secenek C (Siz 15 - Digeri 85 vb.) secilme sayisi: 11 (C altruistic secenek; tez metnindeki "competitive" ifadesiyle uyusmuyor)
+
+########## 9. Ornek disi replikasyon: 19 Kasim oturumlari (33 kisi, 11 grup) vs onceki 84 kisi
+ [onceki 84] 28 grup; ort katki 5.81; sifir 0.132; cycle-control +0.07; leaf-centre -0.19; share leaf<regular 28/28; ilk3->son3 6.77->4.70
+ [yeni 33 (19 Kasim)] 11 grup; ort katki 6.73; sifir 0.022; cycle-control -0.14; leaf-centre -0.58; share leaf<regular 11/11; ilk3->son3 6.70->6.26
+  Yeni oturumlarda sigma_hat = -0.181 (se 0.094)
+  ort katki fark testi (grup duzeyi Mann-Whitney): p=0.130
+  leaf-centre fark testi (grup duzeyi Mann-Whitney): p=0.482
+
+########## 10. Guc (39 grup, %80 guc, alfa 0,05, grup duzeyi eslestirilmis fark)
+  leaf-centre: gozlenen -0.30, grup sd 1.69, MDE(39) 0.76, MDE(60) 0.61; 0,5 jeton icin 90 grup, 1 jeton icin 23 grup
+  centre-regular: gozlenen +0.12, grup sd 2.03, MDE(39) 0.91, MDE(60) 0.74; 0,5 jeton icin 130 grup, 1 jeton icin 33 grup
+  leaf-regular: gozlenen -0.17, grup sd 1.46, MDE(39) 0.66, MDE(60) 0.53; 0,5 jeton icin 67 grup, 1 jeton icin 17 grup
+  cycle-control: gozlenen +0.01, grup sd 1.67, MDE(39) 0.75, MDE(60) 0.60; 0,5 jeton icin 88 grup, 1 jeton icin 22 grup
+  Korelasyon: n=113 ile %80 guc saptanabilir rho ~ 0.261

@@ -1,0 +1,21 @@
+Getiri formulu max |fark|: 0.0
+Grup toplami uyumsuz satir: 0
+Komsuluk toplami uyumsuz satir: 0
+Kisi basi centre tur sayisi: {2: 117}
+Grup-tur basina centre sayisi: {1: 234}
+
+N katilimci 117 | grup 39 | karar 2106 | oturum 7
+session_date  session_code
+2026-11-04    21bzz0th        18
+2026-11-12    ckrw9p0v        15
+              i59wmcge        12
+              wljzphi4        15
+2026-11-17    uqagchnn        24
+2026-11-19    tbo1h687        24
+              w6tq9mcj         9
+Name: pid, dtype: int64
+anketi gecersiz (ilerletilmis_ardisik) kisi 4
+ilerletilen karar 69 | ilerletilen kisi 5 | ilerletilen grup 2 | sure eslesen 2106
+onam=0 kisi: [katılımcı kodları gizlendi]
+Star sirasi grup sayisi {1: 14, 2: 12, 3: 13}
+blok sirasi dagilimi: {'star,cycle,control': 8, 'control,cycle,star': 7, 'control,star,cycle': 7, 'cycle,control,star': 6, 'star,control,cycle': 6, 'cycle,star,control': 5}

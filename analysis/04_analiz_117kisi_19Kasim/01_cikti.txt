@@ -1,0 +1,55 @@
+
+== Tum 2106 karar (117 kisi)
+            ort    sd  medyan  sifir   tam  share    n
+pos                                                   
+control   5.899 4.015   6.000  0.124 0.048  0.140  702
+cycle     5.912 4.027   5.000  0.131 0.046  0.139  702
+center    6.030 3.994   6.000  0.141 0.043  0.144  234
+periphery 5.733 3.873   5.000  0.130 0.030  0.073  468
+genel ort 5.881 (endowment payi 0.392), sifir 0.130, tam 0.043, ic bolge 0.828
+
+== Gercek kararlar (ilerletilen 69 karar haric)
+            ort    sd  medyan  sifir   tam  share    n
+pos                                                   
+control   6.081 3.938   6.000  0.097 0.050  0.144  681
+cycle     6.121 3.939   6.000  0.100 0.047  0.144  678
+center    6.243 3.896   6.000  0.111 0.044  0.149  226
+periphery 5.936 3.785   6.000  0.100 0.031  0.076  452
+genel ort 6.080 (endowment payi 0.405), sifir 0.100, tam 0.044, ic bolge 0.856
+
+== Set 3 (111 kisi) - saglamlik
+            ort    sd  medyan  sifir   tam  share    n
+pos                                                   
+control   6.161 3.913   6.000  0.092 0.051  0.146  666
+cycle     6.174 3.909   6.000  0.095 0.048  0.145  666
+center    6.270 3.843   6.000  0.108 0.041  0.149  222
+periphery 5.998 3.768   6.000  0.095 0.032  0.076  444
+genel ort 6.141 (endowment payi 0.409), sifir 0.095, tam 0.045, ic bolge 0.860
+
+== Tur bazinda ortalama katki (gercek kararlar)
+{1: 6.79, 2: 6.73, 3: 6.74, 4: 6.68, 5: 6.67, 6: 6.22, 7: 7.01, 8: 6.65, 9: 6.05, 10: 5.52, 11: 5.52, 12: 5.58, 13: 6.16, 14: 6.14, 15: 5.5, 16: 5.41, 17: 5.17, 18: 4.88}
+Sifir orani tur 1 -> 18: 0.035 0.195
+Ilk 3 tur / son 3 tur: 6.75 5.15
+Blok sirasina gore ort: {1: 6.64, 2: 6.05, 3: 5.54} | blok ici tura gore: {1: 6.65, 2: 6.51, 3: 6.1, 4: 5.87, 5: 5.79, 6: 5.56}
+Odak noktalari (5 katlari): 0.365 {0: np.float64(0.1), 5: np.float64(0.141), 10: np.float64(0.08), 15: np.float64(0.044)}
+
+== Oturumlara gore (gercek kararlar)
+                            N   ort  sifir
+session_date session_code                 
+2026-11-04   21bzz0th      18 6.451  0.090
+2026-11-12   ckrw9p0v      12 4.353  0.284
+             i59wmcge      12 5.380  0.278
+             wljzphi4      15 6.026  0.000
+2026-11-17   uqagchnn      24 6.093  0.104
+2026-11-19   tbo1h687      24 6.498  0.025
+             w6tq9mcj       9 7.358  0.012
+Grup ortalamalari oturumlar arasi Kruskal-Wallis p = 0.233
+
+== Katilimci duzeyi (anketi gecerli 113 kisi)
+cinsiyet: {'Kadın': 66, 'Erkek': 46, 'Belirtmek istemiyorum': 1}
+alan: {'Karışık / Belirsiz': 49, 'Sayısal (STEM)': 46, 'Sözel (HASS)': 18}
+yas: {'21–23': 63, '18–20': 41, '24–26': 8, '27–30': 1}
+LOSEV bagisi: ort 82.7, medyan 100, sd 28.4, 100 bagislayan 0.602, 0 bagislayan 0.009, 50 ve alti 0.159
+Bagis dagilimi: {0.0: 1, 1.0: 1, 3.0: 1, 10.0: 3, 20.0: 3, 30.0: 4, 45.0: 1, 50.0: 4, 55.0: 1, 60.0: 2, 65.0: 2, 67.0: 1, 70.0: 6, 75.0: 5, 80.0: 2, 85.0: 1, 90.0: 1, 95.0: 2, 99.0: 4, 100.0: 68}
+Oyun kazanci TL: ort 323.2; nihai odeme ort 443.7
+Dictator payi (bagis/100) ort 0.827 vs oyundaki giving share (Control+Cycle) ort 0.145; Wilcoxon p=5.75e-20; Spearman rho=0.141 (p=0.136)

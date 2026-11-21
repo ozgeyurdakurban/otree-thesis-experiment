@@ -1,0 +1,70 @@
+== A. means by position (tokens, giving share)
+  reg        c = 5.905  share = 0.1398
+  center     c = 6.030  share = 0.1439
+  periphery  c = 5.733  share = 0.0731
+
+== B. robust hypotheses
+  R1 composite +1 sd: +0.973 (se 0.318, p 0.0022), 113 participants
+  R2 Cycle-Control +0.013 (p 0.967); TOST +-0.5 p 0.038, 90% CI [-0.44, 0.46]
+  R4_leaf_centre   -0.297; one-sided p (H1: < 0) 0.142; two-sided 0.285; TOST +-1 p 0.0067; 90% CI [-0.75, 0.16]; positive 14/39
+  R5_leaf_regular  -0.172; one-sided p (H1: < 0) 0.234; two-sided 0.468; TOST +-1 p 0.0005; 90% CI [-0.57, 0.22]; positive 16/39
+  centre_regular   +0.125; one-sided p (H1: < 0) 0.648; two-sided 0.711; TOST +-1 p 0.0053; 90% CI [-0.42, 0.67]; positive 21/39
+
+== C. parameter hypotheses
+  FE fractional logit: D1 = 0.029 (se 0.060), D2 = -0.751 (se 0.046); sigma_hat = -0.083 (se 0.066)
+  P1 sigma = 1: z = -16.31; joint D1 = D2 = 0: Wald 270.1 (p 2.2e-59)
+  P3 sigma = 0 (lam = 0): D2 + log 2 = -0.057, z = -1.25, p = 0.212
+  joint (sigma, lam) = (0, 0): Wald 1.91, p = 0.385
+  P5_leaf: mean log(kappa_pos/kappa_reg) = +0.130 (ratio 1.139), group-level p = 0.018; 104 participants
+  P5_centre: mean log(kappa_pos/kappa_reg) = -0.024 (ratio 0.977), group-level p = 0.640; 104 participants
+
+== D. structural interval-censored likelihood
+  participants 114, decisions 2037
+  sigma unrestricted (lam = 0): -0.084 (se 0.067); tau 0.71, s 0.85, phi 0.018, mu -1.15, round slope -0.073, logL -5315.65
+  sigma >= 0 (lam = 0): 0.0000, logL -5316.43 | Leontief logL -5316.43 | CD logL -5435.72
+  joint sigma >= 0, lam >= 0: sigma 0.0000, lam 0.0000, logL -5316.43 | sigma free, lam >= 0: sigma -0.085, lam 0.0000, logL -5315.65
+  LR sigma = 1: 240.1 (p 3.7e-54) | LR sigma = 0 vs sigma >= 0: -0.001 (chi-bar p 1.000) | LR lam = 0 at sigma >= 0: 0.001 (chi-bar p 0.488)
+  profile 95% interval for sigma (lam = 0): [-0.216, 0.048]; lam upper bound at sigma = 0 (chi-bar 95%): 0.060
+        kind  value        ll  sigma     dev
+ sigma|lam=0  -0.40 -5326.560    NaN  21.771
+ sigma|lam=0  -0.30 -5320.764    NaN  10.178
+ sigma|lam=0  -0.20 -5317.124    NaN   2.898
+ sigma|lam=0  -0.10 -5315.675    NaN   0.000
+ sigma|lam=0  -0.00 -5316.431    NaN   1.513
+ sigma|lam=0   0.10 -5319.389    NaN   7.428
+ sigma|lam=0   0.20 -5324.524    NaN  17.698
+ sigma|lam=0   0.30 -5331.793    NaN  32.237
+ sigma|lam=0   0.40 -5341.137    NaN  50.925
+ sigma|lam=0   0.50 -5352.480    NaN  73.611
+ sigma|lam=0   0.60 -5365.734    NaN 100.117
+ sigma|lam=0   0.70 -5380.796    NaN 130.243
+ sigma|lam=0   0.80 -5397.559    NaN 163.769
+ sigma|lam=0   0.90 -5415.907    NaN 200.464
+ sigma|lam=0   1.00 -5435.719    NaN 240.088
+ sigma|lam=0   1.10 -5456.874    NaN 282.399
+ sigma|lam=0   1.20 -5479.252    NaN 327.154
+ lam|sigma=0   0.00 -5316.433    NaN   0.000
+ lam|sigma=0   0.01 -5316.616    NaN   0.365
+ lam|sigma=0   0.03 -5317.035    NaN   1.203
+ lam|sigma=0   0.05 -5317.515    NaN   2.163
+ lam|sigma=0   0.10 -5318.936    NaN   5.006
+ lam|sigma=0   0.20 -5322.447    NaN  12.028
+ lam|sigma=0   0.30 -5326.468    NaN  20.070
+ lam|sigma=0   0.50 -5335.003    NaN  37.140
+ lam|sigma=0   1.00 -5354.855    NaN  76.844
+lam|sigma>=0   0.00 -5316.434    0.0   0.000
+lam|sigma>=0   0.01 -5316.616    0.0   0.365
+lam|sigma>=0   0.03 -5317.035    0.0   1.203
+lam|sigma>=0   0.05 -5317.515    0.0   2.163
+lam|sigma>=0   0.10 -5318.937    0.0   5.006
+lam|sigma>=0   0.20 -5322.448    0.0  12.028
+lam|sigma>=0   0.30 -5326.469    0.0  20.070
+lam|sigma>=0   0.50 -5335.003    0.0  37.139
+lam|sigma>=0   1.00 -5354.856    0.0  76.844
+
+== E. prosocial intensity eta_i = c/X (Control and Cycle, Leontief with lam = 0)
+  111 participants: eta median 0.328, IQR [0.236, 0.448]; kappa median 3.05; eta > 1/beta (corner region) for 0.045
+  Spearman(eta, composite) = 0.273 (p 0.0039), n = 110
+
+== F. group bootstrap of the unrestricted sigma (lam = 0), B = 200
+  bootstrap sd of sigma 0.084; 95% interval [-0.268, 0.072]

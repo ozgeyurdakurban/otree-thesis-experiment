@@ -1,0 +1,4 @@
+k_i (X/c, Control+Cycle): medyan 3.10, ceyrekler 2.25-4.51
+Leontief center: gozlenen 6.27, ongorulen 6.21, RMSE 3.66 | share gozlenen 0.149, ongorulen 0.145
+Leontief periphery: gozlenen 6.00, ongorulen 6.24, RMSE 3.14 | share gozlenen 0.076, ongorulen 0.079
+Karsilastirma (02_cikti): CD RMSE centre 4.22 / leaf 6.12; CES(sigma_hat) RMSE centre 3.66 / leaf 3.13

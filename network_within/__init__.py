@@ -1,3 +1,4 @@
+import kanal_yama  # noqa: F401  (websocket yamasi, 16 Kasim 2026)
 from otree.api import *
 import itertools
 import json
@@ -869,6 +870,9 @@ class Contribution(Page):
 
 class WaitForAll(WaitPage):
     """Tüm oyuncular karar verene kadar bekler, ardından payoff hesaplanır."""
+    # Websocket bildirimi kaybolursa sayfa kendini yeniler (bkz. templates/network_within/WaitForAll.html)
+    template_name = 'network_within/WaitForAll.html'
+
     @staticmethod
     def after_all_players_arrive(group: Group):
         group.set_payoffs()

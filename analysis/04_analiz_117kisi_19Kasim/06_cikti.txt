@@ -1,0 +1,4 @@
+FE logit: D1=0.029, D2=-0.751 -> sigma_hat=-0.083, lambda_hat=0.000 (D1>0 oldugu icin lambda sinirda: 0)
+Delta yerine parametrik simulasyon (20000): sigma %95 [-0.270; 0.042], lambda medyan 0.000, %90 ust sinir 0.088, %95 ust sinir 0.132; P(lambda=0)=0.688
+Grup bootstrap: lambda %95 ust sinir 0.102; P(lambda=0)=0.800
+Yorum: lambda <= ~ust sinir -> impact weight act motivinin kucuk bir kesri; altruism katsayisi zeta = lambda B/(1-B) ~ 0. H3 lambda<=2 icin saglam oldugundan H3'un basarisizligi lambda ile aciklanamaz.
